@@ -1,26 +1,24 @@
 import React from "react";
+import { Button } from "react-bootstrap";
 import Nav from "react-bootstrap/Nav";
 import { Link } from "react-router";
 
 function Navbar({ user, logout }) {
   return (
     <>
-      <Nav.Link as={Link} to="/">
-        Главная страница
-      </Nav.Link>
       {!user && (
         <>
-          <Nav.Link as={Link} to="/registration">
+          <Button as={Link} to="/registration">
             Зарегистрироваться
-          </Nav.Link>
-          <Nav.Link as={Link} to="/login">
+          </Button>
+          <Button as={Link} to="/login">
             Войти
-          </Nav.Link>
+          </Button>
         </>
       )}
       {!!user && (
         <>
-          <Nav.Link onClick={logout}>Выйти</Nav.Link>
+          <Button onClick={logout}>Выйти</Button>
         </>
       )}
     </>
