@@ -1,19 +1,25 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 
-// В реальном приложении эти данные нужно получать с сервера
-const mockListings = [
-  {
-    id: 1,
-    type: "Квартира",
-    price: 50000,
-    description: "Светлая квартира в центре города",
-    address: "Москва, ул. Примерная, д. 1",
-  },
-];
+const mockListings = async() => {
+    const response = await axios.get("/api/listings");
+    return response.data;
+}
+
+const favoritesListings = async() => {
+    const response = await axios.get("/api/listings/favorites");
+    return response.data;
+}  
 
 function LandlordPage() {
-  const [listings, setListings] = useState(mockListings);
+  const [listings, setListings] = useState([]);
+  const [favoritesListings, setFavoritesListings] = useState([]);
+
+  useEffect(() => {
+    mockListings().then(setListings);
+    favoritesListings().then(setFavoritesListings);
+  }, []);
+
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
     type: "",
@@ -21,7 +27,7 @@ function LandlordPage() {
     photos: null,
     description: "",
     address: "",
-    passportScan: null, // поле для будущей верификации паспорта
+    passportScan: null,
   });
 
   const handleChange = (e) => {
@@ -150,9 +156,7 @@ function LandlordPage() {
                 value={formData.address}
                 onChange={handleChange}
               />
-              {/* Здесь в будущем можно встроить компонент карты */}
             </Form.Group>
-
             <Form.Group className="mb-3" controlId="formPassport">
               <Form.Label>Загрузка паспорта (для будущей верификации)</Form.Label>
               <Form.Control
@@ -161,13 +165,11 @@ function LandlordPage() {
                 onChange={handleChange}
               />
             </Form.Group>
-
             <Button type="submit" variant="primary">
               {editingId ? "Сохранить изменения" : "Добавить объявление"}
             </Button>
           </Form>
         </Col>
-
         <Col md={6}>
           <h4 className="mb-3">Список моих объявлений</h4>
           {listings.length === 0 ? (
@@ -180,7 +182,7 @@ function LandlordPage() {
                   <Card.Subtitle className="mb-2 text-muted">
                     Цена: {listing.price} ₽
                   </Card.Subtitle>
-                  <Card.Text>{listing.description}</Card.Text>
+                  <Card.Text>{listing.descriptions}</Card.Text>
                   <Card.Text>
                     <strong>Адрес:</strong> {listing.address}
                   </Card.Text>

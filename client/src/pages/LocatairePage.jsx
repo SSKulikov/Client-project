@@ -2,32 +2,31 @@ import React, { useState } from "react";
 import { Container, Row, Col, Button, Card } from "react-bootstrap";
 import { PersonCircle, HeartFill, HouseDoorFill } from "react-bootstrap-icons";
 
-// Заглушки: в реальном приложении данные нужно получать с сервера
-const allListingsMock = [
-  {
-    id: 1,
-    title: "Уютная студия в центре",
-    price: 45000,
-    description: "Рядом метро, магазины и парки.",
-  },
-  {
-    id: 2,
-    title: "Большая квартира для семьи",
-    price: 75000,
-    description: "Тихий район, рядом школа и детский сад.",
-  },
-];
 
-const favoritesMock = [allListingsMock[0]];
+const allProperties = async() => {
+    const response = await axios.get("/api/properties");
+    return response.data;
+}
+
+const favoritesProperty = async() => {
+    const response = await axios.get("/api/properties/favorites");
+    return response.data;
+}
 
 function LocatairePage() {
   const [showFavorites, setShowFavorites] = useState(false);
+  const [allProperties, setAllProperties] = useState([]);
+  const [favoritesProperty, setFavoritesProperty] = useState([]);
 
-  const listingsToShow = showFavorites ? favoritesMock : allListingsMock;
+  useEffect(() => {
+    allProperties().then(setAllProperties);
+    favoritesProperty().then(setFavoritesProperty);
+  }, []);
+
+  const propertiesToShow = showFavorites ? favoritesProperty : allProperties;
 
   const handleGoHome = () => {
-    // здесь можно использовать useNavigate() из react-router-dom
-    // navigate('/');
+    navigate("/");
   };
 
   return (
@@ -40,13 +39,10 @@ function LocatairePage() {
           </p>
         </Col>
         <Col xs="auto" className="d-flex align-items-center gap-2">
-          {/* Иконка личного кабинета */}
           <Button variant="outline-secondary">
             <PersonCircle size={20} className="me-1" />
             Личный кабинет
           </Button>
-
-          {/* Кнопка избранное */}
           <Button
             variant={showFavorites ? "primary" : "outline-primary"}
             onClick={() => setShowFavorites((prev) => !prev)}
@@ -55,7 +51,6 @@ function LocatairePage() {
             Избранное
           </Button>
 
-          {/* Кнопка на главную */}
           <Button variant="outline-dark" onClick={handleGoHome}>
             <HouseDoorFill size={18} className="me-1" />
             На главную
@@ -74,7 +69,7 @@ function LocatairePage() {
       </Row>
 
       <Row>
-        {listingsToShow.length === 0 ? (
+        {propertiesToShow.length === 0 ? (
           <Col>
             <p>
               {showFavorites
@@ -83,16 +78,19 @@ function LocatairePage() {
             </p>
           </Col>
         ) : (
-          listingsToShow.map((item) => (
+          propertiesToShow.map((item) => (
             <Col md={4} key={item.id} className="mb-3">
               <Card>
                 <Card.Body>
-                  <Card.Title>{item.title}</Card.Title>
+                  <Card.Type>{item.type}</Card.Type>
                   <Card.Subtitle className="mb-2 text-muted">
                     {item.price} ₽ / месяц
                   </Card.Subtitle>
-                  <Card.Text>{item.description}</Card.Text>
-                  {/* В будущем тут можно добавить кнопку "Добавить в избранное" */}
+                  <Card.Text>{item.descriptions}</Card.Text>
+                  <Card.Text>{item.address}</Card.Text>
+                  <Button variant="outline-primary" size="sm" className="me-2">
+                    Добавить в избранное
+                  </Button>
                 </Card.Body>
               </Card>
             </Col>
