@@ -2,15 +2,15 @@ const { User } = require('../../db/models');
 const bcrypt = require('bcrypt');
 
 class AuthService {
-  async registration({ name, email, password }) {
-    if (!name || !email || !password) {
+  async registration({ name, email, password, type }) {
+    if (!name || !email || !password || !type) {
       throw new Error('Email or password is not correct');
     }
     const hashpass = await bcrypt.hash(password, 10);
 
     const [user, created] = await User.findOrCreate({
       where: { email },
-      defaults: { name, hashpass },
+      defaults: { name, hashpass, type },
     });
 
     if (!created) {
