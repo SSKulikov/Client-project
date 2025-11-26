@@ -1,9 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import "../shared/style/Homepage.module.css";
+import { Col, Container, Row } from "react-bootstrap";
+import axios from "axios";
 
 function HomePage({ user }) {
-  const [property, setProperty] = useState([])
+  const [properties, setProperties] = useState([]);
 
-  return <div>Привет, {user && user.name}</div>;
+  useEffect(() => {
+    axios.get("/api/property").then(({ data }) => setProperties(data));
+  }, []);
+
+  console.log(properties);
+//как добавить стили для дива
+  return (
+    <>
+      {properties.map((el) => {
+        return (
+          <>
+            <div>{el.type}</div>
+            <div>{el.price}</div>
+            <div>{el.addres}</div>
+          </>
+        )
+      })}
+    </>
+  );
 }
 
 export default HomePage;

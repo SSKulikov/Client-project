@@ -1,7 +1,7 @@
 import React from "react";
 
 function Footer() {
-  return <div>Footer</div>;
+  return <div>@Лучшая команда</div>;
 }
 
 export default Footer;

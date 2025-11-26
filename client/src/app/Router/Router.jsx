@@ -11,7 +11,8 @@ import { useEffect } from "react";
 
 function Router() {
   const [user, setUser] = useState(null);
-
+  console.log(user);
+  
   const registration = async (e) => {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(e.target));
@@ -52,7 +53,7 @@ function Router() {
           <Route
             path="/registration"
             element={
-              <ProtectedRoute isAllowed={!user} redirectTo="/landlord">
+              <ProtectedRoute isAllowed={!user} redirectTo="/">
                 <Registration registration={registration} />
               </ProtectedRoute>
             }
