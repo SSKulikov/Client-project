@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Form, Button, Card } from "react-bootstrap";
 
-const mockListings = async() => {
+const allListings = async() => {
     const response = await axios.get("/api/listings");
     return response.data;
 }
@@ -12,11 +12,11 @@ const favoritesListings = async() => {
 }  
 
 function LandlordPage() {
-  const [listings, setListings] = useState([]);
+  const [allListings, setAllListings] = useState([]);
   const [favoritesListings, setFavoritesListings] = useState([]);
-
+  const [listingsToShow, setListingsToShow] = useState(allListings);
   useEffect(() => {
-    mockListings().then(setListings);
+    allListings().then(setAllListings);
     favoritesListings().then(setFavoritesListings);
   }, []);
 
@@ -25,8 +25,8 @@ function LandlordPage() {
     type: "",
     price: "",
     photos: null,
-    description: "",
-    address: "",
+    descriptions: "",
+    addres: "",
     passportScan: null,
   });
 
@@ -49,8 +49,8 @@ function LandlordPage() {
               ...item,
               type: formData.type,
               price: formData.price,
-              description: formData.description,
-              address: formData.address,
+              descriptions: formData.descriptions,
+              addres: formData.addres,
             }
             : item
         )
@@ -61,8 +61,8 @@ function LandlordPage() {
         id: Date.now(),
         type: formData.type,
         price: formData.price,
-        description: formData.description,
-        address: formData.address,
+        descriptions: formData.descriptions,
+        addres: formData.addres,
       };
       setListings((prev) => [...prev, newListing]);
     }
@@ -71,20 +71,20 @@ function LandlordPage() {
       type: "",
       price: "",
       photos: null,
-      description: "",
-      address: "",
+      descriptions: "",
+      addres: "",
       passportScan: null,
     });
   };
 
-  const handleEdit = (listing) => {
-    setEditingId(listing.id);
+  const handleEdit = (el) => {
+    setEditingId(el.id);
     setFormData({
-      type: listing.type,
-      price: listing.price,
+      type: el.type,
+      price: el.price,
       photos: null,
-      description: listing.description,
-      address: listing.address,
+      descriptions: el.descriptions,
+      addres: el.addres,
       passportScan: null,
     });
   };
@@ -140,9 +140,9 @@ function LandlordPage() {
               <Form.Control
                 as="textarea"
                 rows={3}
-                name="description"
+                name="descriptions"
                 placeholder="Опишите объект недвижимости"
-                value={formData.description}
+                value={formData.descriptions}
                 onChange={handleChange}
               />
             </Form.Group>
@@ -151,14 +151,14 @@ function LandlordPage() {
               <Form.Label>Адрес (точка на карте)</Form.Label>
               <Form.Control
                 type="text"
-                name="address"
+                name="addres"
                 placeholder="Укажите адрес или координаты"
-                value={formData.address}
+                value={formData.addres}
                 onChange={handleChange}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="formPassport">
-              <Form.Label>Загрузка паспорта (для будущей верификации)</Form.Label>
+              <Form.Label>Загрузка паспорта</Form.Label>
               <Form.Control
                 type="file"
                 name="passportScan"
@@ -172,32 +172,32 @@ function LandlordPage() {
         </Col>
         <Col md={6}>
           <h4 className="mb-3">Список моих объявлений</h4>
-          {listings.length === 0 ? (
+          {listingsToShow.length === 0 ? (
             <p>У вас пока нет объявлений.</p>
           ) : (
-            listings.map((listing) => (
-              <Card key={listing.id} className="mb-3">
+            listingsToShow.map((el) => (
+              <Card key={el.id} className="mb-3">
                 <Card.Body>
-                  <Card.Title>{listing.type}</Card.Title>
+                  <Card.Title>{el.type}</Card.Title>
                   <Card.Subtitle className="mb-2 text-muted">
-                    Цена: {listing.price} ₽
+                    Цена: {el.price} ₽
                   </Card.Subtitle>
-                  <Card.Text>{listing.descriptions}</Card.Text>
+                  <Card.Text>{el.descriptions}</Card.Text>
                   <Card.Text>
-                    <strong>Адрес:</strong> {listing.address}
+                    <strong>Адрес:</strong> {el.addres}
                   </Card.Text>
                   <Button
                     variant="outline-primary"
                     size="sm"
                     className="me-2"
-                    onClick={() => handleEdit(listing)}
+                    onClick={() => handleEdit(el)}
                   >
                     Редактировать
                   </Button>
                   <Button
                     variant="outline-danger"
                     size="sm"
-                    onClick={() => handleDelete(listing.id)}
+                    onClick={() => handleDelete(el.id)}
                   >
                     Удалить
                   </Button>

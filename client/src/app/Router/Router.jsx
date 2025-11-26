@@ -52,7 +52,7 @@ function Router() {
           <Route
             path="/registration"
             element={
-              <ProtectedRoute isAllowed={!user} redirectTo="/">
+              <ProtectedRoute isAllowed={!user} redirectTo="/landlord">
                 <Registration registration={registration} />
               </ProtectedRoute>
             }
