@@ -6,3 +6,21 @@
 .card {
   display: flex;
 }
+
+.cardsRow {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.cardColumn {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.cardColumn > * {
+  width: 100%;
+  max-width: 18rem;
+  height: 100%;
+}
