@@ -1,11 +1,12 @@
 const PropertyService = require('../service/property.service');
 const PropertyController = require('../controllers/property.controller');
 const verifyAccessToken = require('../middlewares/verifyAccessToken');
-
+const MessageController = require('../controllers/message.controller');
 const propertyRouth = require('express').Router();
 
 const propertyService = new PropertyService();
 const propertyController = new PropertyController(propertyService);
+const messageController = new MessageController();
 
 propertyRouth.get('/', propertyController.findAllProperties);
 
@@ -20,6 +21,7 @@ propertyRouth.post('/:id/favorite', verifyAccessToken, propertyController.addToF
 propertyRouth.delete('/:id/favorite', verifyAccessToken, propertyController.removeFromFavorites); 
 propertyRouth.get('/:id', propertyController.findProperty);
 
-
+propertyRouth.get('/messages', verifyAccessToken, messageController.getMessages);
+propertyRouth.post('/messages', verifyAccessToken, messageController.sendMessage);
 
 module.exports = propertyRouth;

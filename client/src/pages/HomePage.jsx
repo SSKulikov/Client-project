@@ -13,6 +13,7 @@ function HomePage({
   removeFromFavorites,
   isFavorite,
   favoriteProperties,
+  sendMessage
 }) {
   const [properties, setProperties] = useState([]);
   const mapRef = useRef(null);
@@ -167,11 +168,7 @@ function HomePage({
                 <h2>Добро пожаловать в сервис аренды!</h2>
                 <p className="text-muted mb-0">
                   Здесь вы можете найти подходящий объект недвижимости и
-                  добавить его в избранное.
-                  {favoriteProperties.length > 0 && (
-                  <span> У вас {favoriteProperties.length} избранных объектов.</span>
-                )}
-                </p>
+                  добавить его в избранное.</p>
               </Col>
             </Row>
           )}
@@ -195,6 +192,7 @@ function HomePage({
                   removeFromFavorites={removeFromFavorites}
                   isFavorite={isFavorite(property.id)}
                   user={user}
+                  sendMessage={sendMessage}
                 />
               </Col>
             );

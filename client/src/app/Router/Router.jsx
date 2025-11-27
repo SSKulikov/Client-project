@@ -143,6 +143,30 @@ function Router() {
     return <div>Загрузка...</div>;
   }
 
+  const sendMessage = async (property, messageText) => {
+  const token = localStorage.getItem("token");
+  try {
+    await axios.post(
+      "/api/property/messages",
+      {
+        propertyId: property.id,
+        message: messageText,
+        propertyType: property.type,
+       propertyAddress: property.addres,
+        propertyPrice: property.price,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  } catch (err) {
+    console.error("Ошибка отправки сообщения:", err);
+    throw err;
+  }
+};
+
   return (
     <BrowserRouter>
       <Routes>
@@ -165,6 +189,7 @@ function Router() {
                 removeFromFavorites={removeFromFavorites}
                 isFavorite={isFavorite}
                 favoriteProperties={favoriteProperties}
+                sendMessage={sendMessage}
               />
             }
           />
