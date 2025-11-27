@@ -14,6 +14,7 @@ app.use(cookieParser());
 app.use('/api/auth', authRouth);
 app.use('/api/property', propertyRouth)
 app.use('/api/card',cardRouter)
+app.use('/api/landlord', propertyRouth)
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {

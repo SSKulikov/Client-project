@@ -11,6 +11,7 @@ import CardPage from "../../pages/CradsPage";
 import { setAccessToken } from "../../shared/axiosinstance";
 import ProtectedRoute from "../../shared/ProtectedRoute";
 import Layout from "../Layout";
+import Page1 from "../../pages/Page1";
 
 function Router() {
   const [user, setUser] = useState(null);
@@ -216,6 +217,12 @@ function Router() {
               </ProtectedRoute>
             }
           />
+        </Route>
+        <Route
+          path="/page1"
+          element={<Page1 properties={properties} user={user} />}
+        >
+          <></>
         </Route>
       </Routes>
     </BrowserRouter>

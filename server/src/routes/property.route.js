@@ -12,8 +12,8 @@ propertyRouth.get('/', propertyController.findAllProperties);
 
 propertyRouth.post('/', verifyAccessToken, propertyController.createProperty);
 propertyRouth.put('/:id', propertyController.updateProperty);
-propertyRouth.delete('/:id', propertyController.deleteProperty);
-
+propertyRouth.delete('/:id', verifyAccessToken, propertyController.deleteProperty);
+propertyRouth.get('/jhj', verifyAccessToken, propertyController.findAllPropertiesofLandor)
 
 propertyRouth.get('/favorites', verifyAccessToken, propertyController.getFavorites);
 propertyRouth.post('/:id/favorite', verifyAccessToken, propertyController.addToFavorites);
