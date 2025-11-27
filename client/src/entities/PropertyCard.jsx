@@ -1,6 +1,13 @@
-import { Card, ListGroup } from "react-bootstrap";
+import { Card, ListGroup, Button } from "react-bootstrap";
 
-function PropertyCard({ property, addToFavorites }) {
+function PropertyCard({ property, addToFavorites, removeFromFavorites, isFavorite, user}) {
+  const handleFavoriteClick = () => {
+    if (isFavorite) {
+      removeFromFavorites(property.id);
+    } else {
+      addToFavorites(property.id);
+    }
+  };
   return (
     <Card style={{ width: "100%", height: "100%" }}>
       <Card.Img variant="top" src={property.image} />
@@ -14,7 +21,27 @@ function PropertyCard({ property, addToFavorites }) {
       </ListGroup>
       <Card.Body>
         <Card.Link href="#">Написать</Card.Link>
-        <Card.Link href="#" onClick={() => addToFavorites(item.id)}>Избранное</Card.Link>
+        {user?.type === "locataire" ? (
+          <Button 
+            variant={isFavorite ? "danger" : "outline-primary"}
+            size="sm"
+            onClick={handleFavoriteClick}
+            style={{
+              marginLeft: '10px',
+              backgroundColor: isFavorite ? '#dc3545' : 'transparent',
+              borderColor: isFavorite ? '#dc3545' : '#007bff',
+              color: isFavorite ? 'white' : '#007bff'
+            }}
+          >{!isFavorite ? 'Добавить в избранное' : 'Удалить из избранного'}</Button>  ) : (
+          <Card.Link 
+            href="#" 
+            style={{ color: '#6c757d', cursor: 'not-allowed' }}
+            onClick={(e) => e.preventDefault()}
+          >
+            Избранное
+          </Card.Link>
+        )}
+        {/* // <Card.Link href="#" onClick={() => addToFavorites(property.id)}>Избранное</Card.Link> */}
       </Card.Body>
     </Card>
   );

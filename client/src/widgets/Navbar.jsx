@@ -33,7 +33,7 @@ import { Button } from "react-bootstrap";
 import Nav from "react-bootstrap/Nav";
 import { Link } from "react-router";
 
-function Navbar({ user, logout }) {
+function Navbar({ user, logout, favoriteCount, localIsFavorite }) {
   return (
     <Nav className="align-items-center" navbarScroll>
       <Nav.Link as={Link} to="/">
@@ -60,7 +60,7 @@ function Navbar({ user, logout }) {
           )}
           {user.type === "locataire" && (
             <Button as={Link} to="/locataire" className="me-2">
-              Избранные
+              Избранные {favoriteCount > 0 && `(${favoriteCount})`}
             </Button>
           )}
           <Button onClick={logout}>Выйти</Button>
