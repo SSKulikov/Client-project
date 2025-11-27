@@ -30,15 +30,12 @@ class PropertyController {
   createProperty = async (req, res) => {
     try {
       const { user } = res.locals;
-      
-    console.log("User ID from token:", user.id);
-      const newProperty = await this.propertyService.createProperty(
-        req.body,
-        user.id,
-      );
-       return res.status(201).json(newProperty);
+
+      console.log('User ID from token:', user.id);
+      const newProperty = await this.propertyService.createProperty(req.body, user.id);
+      return res.status(201).json(newProperty);
     } catch (error) {
-      res.status(500).json({error: error.message});
+      res.status(500).json({ error: error.message });
     }
   };
 
@@ -58,14 +55,24 @@ class PropertyController {
 
   deleteProperty = async (req, res) => {
     try {
-      const { id } = req.pararms;
+      console.log('pending');
+      
+      const { id } = req.params;
+      console.log(id);
+      
       const { user } = res.locals;
       const property = await this.propertyService.findProperty(id);
+      console.log('seccess one');
+      
       if (property.userId !== user.id) {
         return res.sendStatus(403);
       }
+      console.log('pending 2');
+      
       await this.propertyService.deleteProperty(id);
-      return res.status(204);
+      console.log('pending 23');
+      
+      return res.sendStatus(204);
     } catch (error) {
       console.log(error);
       res.sendStatus(401);
@@ -74,7 +81,7 @@ class PropertyController {
 
   getFavorites = async (req, res) => {
     try {
-      const { user } = res.locals; 
+      const { user } = res.locals;
       const favorites = await this.propertyService.findFavoritesByUser(user.id);
       return res.status(200).json(favorites);
     } catch (error) {
@@ -83,7 +90,6 @@ class PropertyController {
     }
   };
 
- 
   addToFavorites = async (req, res) => {
     try {
       const { user } = res.locals;
@@ -102,6 +108,17 @@ class PropertyController {
       const { id } = req.params;
       await this.propertyService.removeFavorite(user.id, id);
       return res.sendStatus(204);
+    } catch (error) {
+      console.log(error);
+      res.sendStatus(401);
+    }
+  };
+
+  findAllPropertiesofLandor = async (req, res) => {
+    try {
+      const { user } = res.locals; 
+      const properties = await this.propertyService.findAllPropertiesofLandor(user.id);
+      return res.status(200).json(properties);
     } catch (error) {
       console.log(error);
       res.sendStatus(401);

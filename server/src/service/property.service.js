@@ -13,7 +13,7 @@ class PropertyService {
     try {
       const result = await Property.create({
         ...data,
-        userId: userId,
+        userId,
       });
 
       return result;
@@ -23,21 +23,21 @@ class PropertyService {
     }
   }
 
-  async updateProperty(id, data, userId) {
-    const property = await Property.findOne({ where: { id, userId } });
+  async updateProperty(id, data) {
+    const property = await Property.findOne({ where: { id } });
     if (!property) {
       return null;
     }
     return property.update(data);
   }
 
-  async deleteProperty(id, userId) {
-    const property = await Property.findOne({ where: { id, userId } });
+  async deleteProperty(id) {
+    const property = await Property.findOne({ where: { id } });
     if (!property) {
       return null;
     }
 
-    await Property.destroy({ where: { id, userId } });
+    await Property.destroy({ where: { id } });
     return true;
   }
 
@@ -63,6 +63,11 @@ class PropertyService {
   async removeFavorite(userId, propertyId) {
     await Favorites.destroy({ where: { userId, propertyId } });
     return true;
+  }
+
+  async findAllPropertiesofLandor(id) {
+    const properties = await Property.findAll({ where: { userId: id } });
+    return properties;
   }
 }
 
