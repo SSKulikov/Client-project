@@ -15,6 +15,8 @@ import Layout from "../Layout";
 function Router() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [favoriteProperties, setFavoriteProperties] = useState([]);
+  const [showFavorites, setShowFavorites] = useState(false);
 
   const registration = async (e) => {
     e.preventDefault();
@@ -44,6 +46,30 @@ function Router() {
     });
   };
 
+  const addToFavorites = async (id) => {
+    const token = localStorage.getItem("token");
+    try {
+      await axios.post(
+        `/api/property/${id}/favorite`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const res = await axios.get("/api/property/favorites", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setFavoriteProperties(res.data);
+      setShowFavorites(true);
+    } catch (err) {
+      console.error("Ошибка добавления в избранное:", err);
+    }
+  };
+
   useEffect(() => {
     axios
       .get("/api/auth/refresh")
@@ -70,15 +96,15 @@ function Router() {
     <BrowserRouter>
       <Routes>
         <Route element={<Layout user={user} logout={logout} />}>
-          <Route path="/" element={<HomePage user={user} />} />
+          <Route
+            path="/"
+            element={<HomePage user={user} addToFavorites={addToFavorites} />}
+          />
 
           <Route
             path="/registration"
             element={
-              <ProtectedRoute
-                isAllowed={!user}
-                redirectTo={redirectAfterAuth}
-              >
+              <ProtectedRoute isAllowed={!user} redirectTo={redirectAfterAuth}>
                 <Registration registration={registration} />
               </ProtectedRoute>
             }
@@ -87,10 +113,7 @@ function Router() {
           <Route
             path="/login"
             element={
-              <ProtectedRoute
-                isAllowed={!user}
-                redirectTo="/"
-              >
+              <ProtectedRoute isAllowed={!user} redirectTo="/">
                 <LoginPage login={login} />
               </ProtectedRoute>
             }
@@ -115,7 +138,7 @@ function Router() {
                 isAllowed={!!user && user.type === "locataire"}
                 redirectTo="/"
               >
-                <LocatairePage user={user}/>
+                <LocatairePage user={user} />
               </ProtectedRoute>
             }
           />

@@ -1,6 +1,6 @@
 import { Card, ListGroup } from "react-bootstrap";
 
-function PropertyCard({ property }) {
+function PropertyCard({ property, addToFavorites }) {
   return (
     <Card style={{ width: "100%", height: "100%" }}>
       <Card.Img variant="top" src={property.image} />
@@ -14,7 +14,7 @@ function PropertyCard({ property }) {
       </ListGroup>
       <Card.Body>
         <Card.Link href="#">Написать</Card.Link>
-        <Card.Link href="#">Избранное</Card.Link>
+        <Card.Link href="#" onClick={() => addToFavorites(item.id)}>Избранное</Card.Link>
       </Card.Body>
     </Card>
   );

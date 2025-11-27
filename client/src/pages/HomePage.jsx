@@ -4,7 +4,7 @@ import axios from "axios";
 import PropertyCard from "../entities/PropertyCard";
 import styles from "../shared/style/Homepage.module.css";
 
-function HomePage({ user }) {
+function HomePage({ user, addToFavorites }) {
   const [properties, setProperties] = useState([]);
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
@@ -182,7 +182,7 @@ function HomePage({ user }) {
           {properties.map((property) => {
             return (
               <Col key={property.id} md={4} className={styles.cardColumn}>
-                <PropertyCard property={property} />
+                <PropertyCard property={property} addToFavorites={addToFavorites}/>
               </Col>
             );
           })}
