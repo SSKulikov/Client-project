@@ -4,7 +4,13 @@ import axios from "axios";
 import PropertyCard from "../entities/PropertyCard";
 import styles from "../shared/style/Homepage.module.css";
 
-function HomePage({ user, addToFavorites }) {
+function HomePage({
+  user,
+  addToFavorites,
+  removeFromFavorites,
+  isFavorite,
+  favoriteProperties,
+}) {
   const [properties, setProperties] = useState([]);
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
@@ -164,6 +170,9 @@ function HomePage({ user, addToFavorites }) {
                 <p className="text-muted mb-0">
                   Здесь вы можете найти подходящий объект недвижимости и
                   добавить его в избранное.
+                  {favoriteProperties.length > 0 && (
+                  <span> У вас {favoriteProperties.length} избранных объектов.</span>
+                )}
                 </p>
               </Col>
             </Row>
@@ -182,7 +191,13 @@ function HomePage({ user, addToFavorites }) {
           {properties.map((property) => {
             return (
               <Col key={property.id} md={4} className={styles.cardColumn}>
-                <PropertyCard property={property} addToFavorites={addToFavorites}/>
+                <PropertyCard
+                  property={property}
+                  addToFavorites={addToFavorites}
+                  removeFromFavorites={removeFromFavorites}
+                  isFavorite={isFavorite(property.id)}
+                  user={user}
+                />
               </Col>
             );
           })}

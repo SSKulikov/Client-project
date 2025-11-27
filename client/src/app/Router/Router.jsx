@@ -43,6 +43,7 @@ function Router() {
       setUser(null);
       setAccessToken(null);
       localStorage.removeItem("token");
+      setFavoriteProperties([])
     });
   };
 
@@ -58,17 +59,49 @@ function Router() {
           },
         }
       );
-      const res = await axios.get("/api/property/favorites", {
+      await loadFavorites();
+    } catch (err) {
+      console.error("Ошибка добавления в избранное:", err)
+      throw err
+    }
+  }
+
+    const removeFromFavorites = async (id) => {
+    const token = localStorage.getItem("token");
+    try {
+      await axios.delete(`/api/property/${id}/favorite`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      setFavoriteProperties(res.data);
-      setShowFavorites(true);
+      await loadFavorites();
     } catch (err) {
-      console.error("Ошибка добавления в избранное:", err);
+      console.error("Ошибка удаления из избранного:", err);
+      throw err;
     }
   };
+
+const loadFavorites = async () => {
+    if (user?.type === "locataire") {
+      const token = localStorage.getItem("token");
+      try {
+        const res = await axios.get("/api/property/favorites", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setFavoriteProperties(res.data);
+      } catch (err) {
+        console.error("Ошибка загрузки избранного:", err);
+      }
+    }
+  };
+
+  const isFavorite = (propertyId) => {
+    return favoriteProperties.some(fav => fav.id === propertyId);
+  };
+      
+  
 
   useEffect(() => {
     axios
@@ -77,9 +110,21 @@ function Router() {
         setUser(res.data.user);
         setAccessToken(res.data.accessToken);
         localStorage.setItem("token", res.data.accessToken);
+      if (res.data.user?.type === "locataire") {
+          loadFavorites();
+        }
       })
       .finally(() => setLoading(false));
   }, []);
+
+
+  useEffect(() => {
+    if (user?.type === "locataire") {
+      loadFavorites();
+    } else {
+      setFavoriteProperties([]); 
+    }
+  }, [user]);
 
   const redirectAfterAuth =
     user?.type === "landlord"
@@ -95,12 +140,11 @@ function Router() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<Layout user={user} logout={logout} />}>
+        <Route element={<Layout user={user} logout={logout} favoriteCount={favoriteProperties.length}/>}>
           <Route
             path="/"
-            element={<HomePage user={user} addToFavorites={addToFavorites} />}
+            element={<HomePage user={user} addToFavorites={addToFavorites} removeFromFavorites={removeFromFavorites} isFavorite={isFavorite} favoriteProperties={favoriteProperties}/>}
           />
-
           <Route
             path="/registration"
             element={
@@ -138,7 +182,7 @@ function Router() {
                 isAllowed={!!user && user.type === "locataire"}
                 redirectTo="/"
               >
-                <LocatairePage user={user} />
+                <LocatairePage user={user}  favoriteProperties={favoriteProperties} removeFromFavorites={removeFromFavorites} loadFavorites={loadFavorites}/>
               </ProtectedRoute>
             }
           />
