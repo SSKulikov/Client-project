@@ -44,7 +44,7 @@ class PropertyController {
   updateProperty = async (req, res) => {
     try {
       const { id } = req.params;
-      const updateProperty = await this.propertyService.updateCharacter(id, req.body);
+      const updateProperty = await this.propertyService.updateProperty(id, req.body);
       if (!updateProperty) {
         return res.status(404).send('Недвижимость не найден');
       }

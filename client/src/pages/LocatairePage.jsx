@@ -87,7 +87,7 @@ function LocatairePage() {
                     {item.price} ₽ / месяц
                   </Card.Subtitle>
                   <Card.Text>{item.descriptions}</Card.Text>
-                  <Card.Text>{item.address}</Card.Text>
+                  <Card.Text>{item.addres}</Card.Text>
                   <Button variant="outline-primary" size="sm" className="me-2">
                     Добавить в избранное
                   </Button>

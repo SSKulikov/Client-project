@@ -13,7 +13,7 @@ class PropertyService {
         return Property.create(data)
     }
 
-    async updateCharacter(id, data) {
+    async updateProperty(id, data) {
         const property = await Property.findByPk(id)
         if (!property) {
             return null
