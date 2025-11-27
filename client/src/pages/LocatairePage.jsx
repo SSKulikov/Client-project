@@ -7,7 +7,7 @@ function LocatairePage({ user, favoriteProperties, removeFromFavorites }) {
   const [activeTab, setActiveTab] = useState("favorites");
   const [allProperties, setAllProperties] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState([])
+  const [messages, setMessages] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,11 +22,34 @@ function LocatairePage({ user, favoriteProperties, removeFromFavorites }) {
         console.error("Ошибка загрузки объектов:", err);
         setLoading(false);
       });
+
+    loadMessages(); //
   }, []);
 
-  const handleDeleteAllMessage = () => {
-    setMessage([])
-  }
+  const loadMessages = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.get("/api/property/messages", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setMessages(res.data);
+    } catch (err) {
+      console.error("Ошибка загрузки сообщений:", err);
+
+      setMessages([]);
+    }
+  };
+
+  const handleDeleteMessage = (messageId) => {
+    setMessages(messages.filter((msg) => msg.id !== messageId));
+  };
+
+  const handleDeleteAllMessages = () => {
+    setMessages([]);
+    alert("Все сообщения удалены");
+  };
 
   if (loading) {
     return <div>Загрузка...</div>;
@@ -90,44 +113,55 @@ function LocatairePage({ user, favoriteProperties, removeFromFavorites }) {
             )}
           </Row>
         </Tab>
-        <Tab
-          eventKey="messages"
-          title={`Сообщения (${message.length})`}
-        >
+        <Tab eventKey="messages" title={`Сообщения (${messages.length})`}>
           <Row>
             <Col>
-              {message.length === 0 ? (
-                <p>У вас пока нет сообщений.</p>
+              {messages.length === 0 ? (
+                <div>
+                  <p>У вас пока нет сообщений.</p>
+                  <p className="text-muted">
+                    Напишите владельцам недвижимости на главной странице!
+                  </p>
+                </div>
               ) : (
                 <div>
-                  {message.map((message) => (
+                  {messages.map((message) => (
                     <Card key={message.id} className="mb-3">
                       <Card.Body>
-                        <Card.Title>{message.subject}</Card.Title>
-                        <Card.Text>{message.content}</Card.Text>
-                        <Card.Text>
-                          <small className="text-muted">
-                            От: {message.sender} • {message.date}
-                          </small>
-                        </Card.Text>
-                        <Button variant="outline-danger" size="sm">
-                          Удалить
-                        </Button>
+                        <div className="d-flex justify-content-between align-items-start">
+                          <div>
+                            <Card.Title className="h6">
+                              Объект: {message.propertyType}
+                            </Card.Title>
+                            <Card.Text>{message.message}</Card.Text>
+                            <Card.Text>
+                              <small className="text-muted">
+                                Отправлено:{" "}
+                                {new Date(message.timestamp).toLocaleString()}
+                              </small>
+                            </Card.Text>
+                          </div>
+                          <Button
+                            variant="outline-danger"
+                            size="sm"
+                            onClick={() => handleDeleteMessage(message.id)}
+                          >
+                            ✕
+                          </Button>
+                        </div>
                       </Card.Body>
                     </Card>
                   ))}
+
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={handleDeleteAllMessages}
+                    className="mt-3"
+                  >
+                    Удалить все сообщения
+                  </Button>
                 </div>
-              )}
-              
-              {message.length > 0 && (
-                <Button 
-                  variant="danger" 
-                  size="sm" 
-                  onClick={handleDeleteAllMessage}
-                  className="mt-3"
-                >
-                  Удалить все сообщения
-                </Button>
               )}
             </Col>
           </Row>

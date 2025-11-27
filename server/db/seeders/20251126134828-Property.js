@@ -11,12 +11,7 @@ module.exports = {
           price: 35000,
           addres: 'Ленина 12',
           userId: null,
-<<<<<<< HEAD
-          image:
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0TQy3qoMk0GmRf8iYT_aII518GaAK-MYfFg&s',
-=======
           image: 'https://koldunov.com/wp-content/uploads/2021/03/08.jpg',
->>>>>>> main
           descriptions:
             'Просторный двухэтажный дом для аренды с современным ремонтом и большим садом. Идеально для семьи',
           createdAt: new Date(),
