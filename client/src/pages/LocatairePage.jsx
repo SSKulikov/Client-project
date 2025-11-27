@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import { Container, Row, Col, Button, Card } from "react-bootstrap";
- import { PersonCircle, HeartFill, HouseDoorFill } from "react-bootstrap-icons";
+import { PersonCircle, HeartFill, HouseDoorFill } from "react-bootstrap-icons";
 
 function LocatairePage() {
   const [showFavorites, setShowFavorites] = useState(false);
@@ -91,6 +91,12 @@ function LocatairePage() {
             <Col md={4} key={item.id} className="mb-3">
               <Card>
                 <Card.Body>
+                  <Card.Img
+                    variant="top"
+                    src={item.image}
+                    alt={item.type}
+                    style={{ height: "200px", objectFit: "cover" }}
+                  />
                   <Card.Title>{item.type}</Card.Title>
                   <Card.Subtitle className="mb-2 text-muted">
                     {item.price} ₽ / месяц

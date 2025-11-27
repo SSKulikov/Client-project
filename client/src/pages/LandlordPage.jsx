@@ -6,6 +6,7 @@ function LandlordPage() {
   const [properties, setProperties] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
+    image: "",
     type: "",
     price: "",
     addres: "",
@@ -26,43 +27,37 @@ function LandlordPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("1. Форма отправлена, данные:", formData);
 
-    const token = localStorage.getItem('token')
-    console.log("2. Токен из localStorage:", token ? "есть" : "отсутствует");
-    if(!token){
-      console.log("3. Токен отсутствует, прерываем");
-      return
+    const token = localStorage.getItem("token");
+    if (!token) {
+      return;
     }
 
     try {
-      console.log("4. Пытаемся создать объявление...");
       if (editingId) {
-        const res = await axios.put(`/api/property/${editingId}`, formData, {headers: {Authorization: `Bearer ${token}`}});
-        console.log("5. Успех! Ответ сервера:", res.data);
+        const res = await axios.put(`/api/property/${editingId}`, formData, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setProperties((prev) =>
           prev.map((p) => (p.id === editingId ? res.data : p))
         );
         setEditingId(null);
       } else {
-        const res = await axios.post("/api/property", formData, { headers: {Authorization: `Bearer ${token}`}
-            });
+        const res = await axios.post("/api/property", formData, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setProperties((prev) => [...prev, res.data]);
-        console.log("6. Объявление добавлено в состояние");
       }
 
       setFormData({
+        image: "",
         type: "",
         price: "",
         addres: "",
         descriptions: "",
       });
-      console.log("7. Форма очищена");
     } catch (err) {
       console.error("Ошибка сохранения объявления:", err);
-      console.log("8.1. Response data:", err.response?.data);
-    console.log("8.2. Response status:", err.response?.status);
-    console.log("8.3. Response headers:", err.response?.headers);
     }
   };
 
@@ -156,6 +151,12 @@ function LandlordPage() {
             properties.map((el) => (
               <Card key={el.id} className="mb-3">
                 <Card.Body>
+                  <Card.Img
+                    variant="top"
+                    src={el.image}
+                    alt={el.type}
+                    style={{ height: "200px", objectFit: "cover" }}
+                  />
                   <Card.Title>{el.type}</Card.Title>
                   <Card.Subtitle className="mb-2 text-muted">
                     Цена: {el.price} ₽
