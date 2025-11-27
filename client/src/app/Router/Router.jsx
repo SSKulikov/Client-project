@@ -15,6 +15,7 @@ import Layout from "../Layout";
 function Router() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [properties, setProperties] = useState([]);
   const [favoriteProperties, setFavoriteProperties] = useState([]);
   const [showFavorites, setShowFavorites] = useState(false);
 
@@ -72,6 +73,13 @@ function Router() {
 
   useEffect(() => {
     axios
+      .get("/api/property")
+      .then((res) => setProperties(res.data))
+      .catch((err) => console.error("Ошибка загрузки объявлений:", err));
+  }, []);
+
+  useEffect(() => {
+    axios
       .get("/api/auth/refresh")
       .then((res) => {
         setUser(res.data.user);
@@ -126,7 +134,7 @@ function Router() {
                 isAllowed={!!user && user.type === "landlord"}
                 redirectTo="/"
               >
-                <LandlordPage />
+                <LandlordPage setProperties={setProperties} properties={properties}/>
               </ProtectedRoute>
             }
           />

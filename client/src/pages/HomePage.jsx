@@ -136,15 +136,6 @@ function HomePage({ user, addToFavorites }) {
   return (
     <div>
       <Container>
-        {/* <Row className="mb-4 align-items-center">
-          <Col>
-            <h2>Добро пожаловать в сервис аренды!</h2>
-            <p className="text-muted mb-0">
-              Здесь вы можете найти подходящий объект недвижимости и добавить
-              его в избранное.
-            </p>
-          </Col>
-        </Row> */}
         <>
           {user && user.type === "locataire" && (
             <Row className="mb-4 align-items-center">
