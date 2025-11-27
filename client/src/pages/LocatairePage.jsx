@@ -11,13 +11,18 @@ function LocatairePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
     axios
       .get("/api/property")
       .then((res) => setAllProperties(res.data))
       .catch((err) => console.error("Ошибка загрузки объектов:", err));
 
     axios
-      .get("/api/property/favorites")
+      .get("/api/property/favorites", {
+        headers: { 
+        Authorization: `Bearer ${token}` 
+      }
+      })
       .then((res) => setFavoriteProperties(res.data))
       .catch((err) => console.error("Ошибка загрузки избранного:", err));
   }, []);
@@ -29,9 +34,18 @@ function LocatairePage() {
   };
 
   const addToFavorites = async (id) => {
+    const token = localStorage.getItem("token");
     try {
-      await axios.post(`/api/property/${id}/favorite`);
-      const res = await axios.get("/api/property/favorites");
+      await axios.post(`/api/property/${id}/favorite`, {}, {
+      headers: { 
+        Authorization: `Bearer ${token}` 
+      }
+    });
+      const res = await axios.get("/api/property/favorites", {
+      headers: { 
+        Authorization: `Bearer ${token}` 
+      }
+    });
       setFavoriteProperties(res.data);
       setShowFavorites(true);
     } catch (err) {
@@ -103,6 +117,7 @@ function LocatairePage() {
                   </Card.Subtitle>
                   <Card.Text>{item.descriptions}</Card.Text>
                   <Card.Text>{item.addres}</Card.Text>
+                  {!showFavorites && (
                   <Button
                     variant="outline-primary"
                     size="sm"
@@ -111,6 +126,7 @@ function LocatairePage() {
                   >
                     Добавить в избранное
                   </Button>
+                  )}
                 </Card.Body>
               </Card>
             </Col>

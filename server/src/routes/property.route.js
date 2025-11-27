@@ -15,10 +15,11 @@ propertyRouth.put('/:id', propertyController.updateProperty);
 propertyRouth.delete('/:id', propertyController.deleteProperty);
 
 
-propertyRouth.get('/favorites', propertyController.getFavorites);
-propertyRouth.post('/:id/favorite', propertyController.addToFavorites);
-propertyRouth.delete('/:id/favorite', propertyController.removeFromFavorites);
+propertyRouth.get('/favorites', verifyAccessToken, propertyController.getFavorites);
+propertyRouth.post('/:id/favorite', verifyAccessToken, propertyController.addToFavorites);
+propertyRouth.delete('/:id/favorite', verifyAccessToken, propertyController.removeFromFavorites); 
 propertyRouth.get('/:id', propertyController.findProperty);
+
 
 
 module.exports = propertyRouth;

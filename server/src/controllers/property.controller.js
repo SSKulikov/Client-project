@@ -29,9 +29,6 @@ class PropertyController {
 
   createProperty = async (req, res) => {
     try {
-      console.log("=== CONTROLLER CREATE PROPERTY ===");
-    console.log("req.body:", req.body);
-    console.log("res.locals.user:", res.locals.user);
       const { user } = res.locals;
       
     console.log("User ID from token:", user.id);
@@ -39,10 +36,8 @@ class PropertyController {
         req.body,
         user.id,
       );
-       console.log("✅ Property created:", newProperty);
-      return res.status(201).json(newProperty);
+       return res.status(201).json(newProperty);
     } catch (error) {
-      console.log("❌ Controller error:", error);
       res.status(500).json({error: error.message});
     }
   };
