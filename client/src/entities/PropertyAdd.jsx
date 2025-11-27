@@ -1,20 +1,23 @@
 import axios from "axios";
 import React, { useState } from "react";
 import axiosinstance from "../shared/axiosinstance";
+import { useNavigate } from "react-router";
 
 function PropertyAdd({ properties, setProperties }) {
   const [newProperty, setNewProperty] = useState({});
+  const navigate = useNavigate();
 
   async function addProperty(e) {
-    e.preventDefault()
-    const form = new FormData(e.target)
-    const newProp = Object.fromEntries(form)
-    const {data} = axiosinstance.post("/property", newProp)
-    setProperties(()=>[...properties, data])
-    e.target.reset()
+    e.preventDefault();
+    const form = new FormData(e.target);
+    const newProp = Object.fromEntries(form);
+    const { data } = axiosinstance.post("/property", newProp);
+    setProperties(() => [...properties, data]);
+    navigate("/");
   }
+
   console.log(newProperty);
-  
+
   return (
     <form onSubmit={(e) => addProperty(e)}>
       <input
