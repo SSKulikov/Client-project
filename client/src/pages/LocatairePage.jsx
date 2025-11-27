@@ -7,6 +7,7 @@ function LocatairePage({ user, favoriteProperties, removeFromFavorites }) {
   const [activeTab, setActiveTab] = useState("favorites");
   const [allProperties, setAllProperties] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState([])
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,6 +23,10 @@ function LocatairePage({ user, favoriteProperties, removeFromFavorites }) {
         setLoading(false);
       });
   }, []);
+
+  const handleDeleteAllMessage = () => {
+    setMessage([])
+  }
 
   if (loading) {
     return <div>Загрузка...</div>;
@@ -43,7 +48,10 @@ function LocatairePage({ user, favoriteProperties, removeFromFavorites }) {
         onSelect={(tab) => setActiveTab(tab)}
         className="mb-4"
       >
-        <Tab eventKey="favorites" title={`Избранные (${favoriteProperties.length})`}>
+        <Tab
+          eventKey="favorites"
+          title={`Избранные варианты (${favoriteProperties.length})`}
+        >
           <Row>
             {favoriteProperties.length === 0 ? (
               <Col>
@@ -80,6 +88,48 @@ function LocatairePage({ user, favoriteProperties, removeFromFavorites }) {
                 </Col>
               ))
             )}
+          </Row>
+        </Tab>
+        <Tab
+          eventKey="messages"
+          title={`Сообщения (${message.length})`}
+        >
+          <Row>
+            <Col>
+              {message.length === 0 ? (
+                <p>У вас пока нет сообщений.</p>
+              ) : (
+                <div>
+                  {message.map((message) => (
+                    <Card key={message.id} className="mb-3">
+                      <Card.Body>
+                        <Card.Title>{message.subject}</Card.Title>
+                        <Card.Text>{message.content}</Card.Text>
+                        <Card.Text>
+                          <small className="text-muted">
+                            От: {message.sender} • {message.date}
+                          </small>
+                        </Card.Text>
+                        <Button variant="outline-danger" size="sm">
+                          Удалить
+                        </Button>
+                      </Card.Body>
+                    </Card>
+                  ))}
+                </div>
+              )}
+              
+              {message.length > 0 && (
+                <Button 
+                  variant="danger" 
+                  size="sm" 
+                  onClick={handleDeleteAllMessage}
+                  className="mt-3"
+                >
+                  Удалить все сообщения
+                </Button>
+              )}
+            </Col>
           </Row>
         </Tab>
       </Tabs>
