@@ -2,8 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import axios from "axios";
 import PropertyCard from "../entities/PropertyCard";
-import Card from "react-bootstrap/Card";
-import ListGroup from "react-bootstrap/ListGroup";
+import styles from "../shared/style/Homepage.module.css";
 
 function HomePage() {
   const [properties, setProperties] = useState([]);
@@ -14,6 +13,7 @@ function HomePage() {
   useEffect(() => {
     axios.get("/api/property").then(({ data }) => setProperties(data));
   }, []);
+  console.log(properties);
 
   // Загрузка скрипта Яндекс.Карт API и инициализация карты
   useEffect(() => {
@@ -143,14 +143,16 @@ function HomePage() {
             />
           </Col>
         </Row>
-        <Row>
+        <Row className={styles.cardsRow}>
           {properties.map((property) => {
             return (
-              <>
-                <Col>
-                  <PropertyCard property={property} />
-                </Col>
-              </>
+              <Col
+                key={property.id}
+                md={4}
+                className={styles.cardColumn}
+              >
+                <PropertyCard property={property} />
+              </Col>
             );
           })}
         </Row>
