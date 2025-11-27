@@ -89,7 +89,7 @@ function Router() {
             element={
               <ProtectedRoute
                 isAllowed={!user}
-                redirectTo={redirectAfterAuth}
+                redirectTo="/"
               >
                 <LoginPage login={login} />
               </ProtectedRoute>
@@ -115,7 +115,7 @@ function Router() {
                 isAllowed={!!user && user.type === "locataire"}
                 redirectTo="/"
               >
-                <LocatairePage />
+                <LocatairePage user={user}/>
               </ProtectedRoute>
             }
           />

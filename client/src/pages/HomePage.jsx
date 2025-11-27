@@ -4,7 +4,7 @@ import axios from "axios";
 import PropertyCard from "../entities/PropertyCard";
 import styles from "../shared/style/Homepage.module.css";
 
-function HomePage() {
+function HomePage({ user }) {
   const [properties, setProperties] = useState([]);
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
@@ -130,13 +130,48 @@ function HomePage() {
       );
     }
   }, [properties]);
+  console.log(user, "<------- user здесь");
 
   console.log(properties);
   return (
     <div>
       <Container>
+        {/* <Row className="mb-4 align-items-center">
+          <Col>
+            <h2>Добро пожаловать в сервис аренды!</h2>
+            <p className="text-muted mb-0">
+              Здесь вы можете найти подходящий объект недвижимости и добавить
+              его в избранное.
+            </p>
+          </Col>
+        </Row> */}
+        <>
+          {user && user.type === "locataire" && (
+            <Row className="mb-4 align-items-center">
+              <Col>
+                <h2>Добро пожаловать в сервис аренды, {user.name}!</h2>
+                <p className="text-muted mb-0">
+                  Здесь вы можете найти подходящий объект недвижимости и
+                  добавить его в избранное.
+                </p>
+              </Col>
+            </Row>
+          )}
+          {!user && (
+            <Row className="mb-4 align-items-center">
+              <Col>
+                <h2>Добро пожаловать в сервис аренды!</h2>
+                <p className="text-muted mb-0">
+                  Здесь вы можете найти подходящий объект недвижимости и
+                  добавить его в избранное.
+                </p>
+              </Col>
+            </Row>
+          )}
+        </>
         <Row>
-          <Col md={12}>
+          <Col md={2}>hgfhgf</Col>
+          <Col md={10}>
             <div
               ref={mapRef}
               style={{ width: "100%", height: "500px", marginBottom: "20px" }}
@@ -146,11 +181,7 @@ function HomePage() {
         <Row className={styles.cardsRow}>
           {properties.map((property) => {
             return (
-              <Col
-                key={property.id}
-                md={4}
-                className={styles.cardColumn}
-              >
+              <Col key={property.id} md={4} className={styles.cardColumn}>
                 <PropertyCard property={property} />
               </Col>
             );

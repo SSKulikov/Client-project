@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { Container, Row, Col, Button, Card } from "react-bootstrap";
 import { PersonCircle, HeartFill, HouseDoorFill } from "react-bootstrap-icons";
 
-function LocatairePage() {
+function LocatairePage({ user }) {
   const [showFavorites, setShowFavorites] = useState(false);
   const [allProperties, setAllProperties] = useState([]);
   const [favoriteProperties, setFavoriteProperties] = useState([]);
@@ -42,38 +42,19 @@ function LocatairePage() {
   return (
     <Container className="py-4">
       <Row className="mb-4 align-items-center">
-        <Col>
-          <h2>Добро пожаловать в сервис аренды!</h2>
-          <p className="text-muted mb-0">
-            Здесь вы можете найти подходящий объект недвижимости и добавить его
-            в избранное.
-          </p>
-        </Col>
-        <Col xs="auto" className="d-flex align-items-center gap-2">
-          <Button variant="outline-secondary">
-            <PersonCircle size={20} className="me-1" />
-            Личный кабинет
-          </Button>
-          <Button
-            variant={showFavorites ? "primary" : "outline-primary"}
-            onClick={() => setShowFavorites((prev) => !prev)}
-          >
-            <HeartFill size={18} className="me-1" />
-            Избранное
-          </Button>
-
-          <Button variant="outline-dark" onClick={handleGoHome}>
-            <HouseDoorFill size={18} className="me-1" />
-            На главную
-          </Button>
-        </Col>
+        <Row className="mb-4 align-items-center">
+          <Col>
+            <h2>Добро пожаловать в сервис аренды, {user.name}!</h2>
+            <p className="text-muted mb-0">
+              Здесь вы можете посмотреть на выбранные объекты недвижимости
+            </p>
+          </Col>
+        </Row>
       </Row>
 
       <Row className="mb-3">
         <Col>
-          <h4>
-            {showFavorites ? "Избранные объекты" : "Все объекты недвижимости"}
-          </h4>
+          <h4>Избранные объекты</h4>
         </Col>
       </Row>
 
@@ -87,7 +68,7 @@ function LocatairePage() {
             </p>
           </Col>
         ) : (
-          propertiesToShow.map((item) => (
+          favoriteProperties.map((item) => (
             <Col md={4} key={item.id} className="mb-3">
               <Card>
                 <Card.Body>

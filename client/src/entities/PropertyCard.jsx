@@ -14,6 +14,7 @@ function PropertyCard({ property }) {
       </ListGroup>
       <Card.Body>
         <Card.Link href="#">Написать</Card.Link>
+        <Card.Link href="#">Избранное</Card.Link>
       </Card.Body>
     </Card>
   );

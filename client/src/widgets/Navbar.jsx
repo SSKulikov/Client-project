@@ -60,7 +60,7 @@ function Navbar({ user, logout }) {
           )}
           {user.type === "locataire" && (
             <Button as={Link} to="/locataire" className="me-2">
-              Поиск жилья
+              Избранные
             </Button>
           )}
           <Button onClick={logout}>Выйти</Button>
