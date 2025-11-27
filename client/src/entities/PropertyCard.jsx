@@ -1,10 +1,24 @@
-function PropertyCard({porperty}) {
-    return (
-      <div>
-        <h2>{porperty.type}</h2>
-        <p>{porperty.price}</p>
-      </div>
+import { Card, ListGroup } from "react-bootstrap";
+
+function PropertyCard({ property }) {
+  return (
+    <>
+      <Card style={{ width: "18rem" }}>
+        <Card.Img variant="top" src="holder.js/100px180?text=Image cap" />
+        <Card.Body>
+          <Card.Title>{property.type}</Card.Title>
+          <Card.Text>{property.descriptions}</Card.Text>
+        </Card.Body>
+        <ListGroup className="list-group-flush">
+          <ListGroup.Item> Цена: {property.price} руб</ListGroup.Item>
+          <ListGroup.Item>Адрес: {property.addres}</ListGroup.Item>
+        </ListGroup>
+        <Card.Body>
+          <Card.Link href="#">Написать</Card.Link>
+        </Card.Body>
+      </Card>
+    </>
   );
 }
 
-export default PropertyCard
+export default PropertyCard;
