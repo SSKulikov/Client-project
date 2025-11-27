@@ -7,7 +7,7 @@ import LoginPage from "../../pages/LoginPage";
 import HomePage from "../../pages/HomePage";
 import LandlordPage from "../../pages/LandlordPage";
 import LocatairePage from "../../pages/LocatairePage";
-
+import CardPage from "../../pages/CradsPage";
 import { setAccessToken } from "../../shared/axiosinstance";
 import ProtectedRoute from "../../shared/ProtectedRoute";
 import Layout from "../Layout";
@@ -44,7 +44,7 @@ function Router() {
       setUser(null);
       setAccessToken(null);
       localStorage.removeItem("token");
-      setFavoriteProperties([])
+      setFavoriteProperties([]);
     });
   };
 
@@ -62,12 +62,12 @@ function Router() {
       );
       await loadFavorites();
     } catch (err) {
-      console.error("Ошибка добавления в избранное:", err)
-      throw err
+      console.error("Ошибка добавления в избранное:", err);
+      throw err;
     }
-  }
+  };
 
-    const removeFromFavorites = async (id) => {
+  const removeFromFavorites = async (id) => {
     const token = localStorage.getItem("token");
     try {
       await axios.delete(`/api/property/${id}/favorite`, {
@@ -82,7 +82,7 @@ function Router() {
     }
   };
 
-const loadFavorites = async () => {
+  const loadFavorites = async () => {
     if (user?.type === "locataire") {
       const token = localStorage.getItem("token");
       try {
@@ -99,10 +99,8 @@ const loadFavorites = async () => {
   };
 
   const isFavorite = (propertyId) => {
-    return favoriteProperties.some(fav => fav.id === propertyId);
+    return favoriteProperties.some((fav) => fav.id === propertyId);
   };
-      
-  
 
   useEffect(() => {
     axios
@@ -118,19 +116,18 @@ const loadFavorites = async () => {
         setUser(res.data.user);
         setAccessToken(res.data.accessToken);
         localStorage.setItem("token", res.data.accessToken);
-      if (res.data.user?.type === "locataire") {
+        if (res.data.user?.type === "locataire") {
           loadFavorites();
         }
       })
       .finally(() => setLoading(false));
   }, []);
 
-
   useEffect(() => {
     if (user?.type === "locataire") {
       loadFavorites();
     } else {
-      setFavoriteProperties([]); 
+      setFavoriteProperties([]);
     }
   }, [user]);
 
@@ -148,10 +145,27 @@ const loadFavorites = async () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<Layout user={user} logout={logout} favoriteCount={favoriteProperties.length}/>}>
+        <Route
+          element={
+            <Layout
+              user={user}
+              logout={logout}
+              favoriteCount={favoriteProperties.length}
+            />
+          }
+        >
+          <Route path="/card/:id" element={<CardPage />} />
           <Route
             path="/"
-            element={<HomePage user={user} addToFavorites={addToFavorites} removeFromFavorites={removeFromFavorites} isFavorite={isFavorite} favoriteProperties={favoriteProperties}/>}
+            element={
+              <HomePage
+                user={user}
+                addToFavorites={addToFavorites}
+                removeFromFavorites={removeFromFavorites}
+                isFavorite={isFavorite}
+                favoriteProperties={favoriteProperties}
+              />
+            }
           />
           <Route
             path="/registration"
@@ -178,7 +192,10 @@ const loadFavorites = async () => {
                 isAllowed={!!user && user.type === "landlord"}
                 redirectTo="/"
               >
-                <LandlordPage setProperties={setProperties} properties={properties}/>
+                <LandlordPage
+                  setProperties={setProperties}
+                  properties={properties}
+                />
               </ProtectedRoute>
             }
           />
@@ -190,7 +207,12 @@ const loadFavorites = async () => {
                 isAllowed={!!user && user.type === "locataire"}
                 redirectTo="/"
               >
-                <LocatairePage user={user}  favoriteProperties={favoriteProperties} removeFromFavorites={removeFromFavorites} loadFavorites={loadFavorites}/>
+                <LocatairePage
+                  user={user}
+                  favoriteProperties={favoriteProperties}
+                  removeFromFavorites={removeFromFavorites}
+                  loadFavorites={loadFavorites}
+                />
               </ProtectedRoute>
             }
           />
