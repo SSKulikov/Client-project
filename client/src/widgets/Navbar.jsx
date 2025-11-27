@@ -24,7 +24,7 @@ function Navbar({ user, logout }) {
               Мои объявления
             </Button>
           )}
-          {user.type === "tenant" && (
+          {user.type === "locataire" && (
             <Button as={Link} to="/locataire" className="me-2">
               Поиск жилья
             </Button>

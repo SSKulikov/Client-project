@@ -52,7 +52,7 @@ function Router() {
   const redirectAfterAuth =
     user?.type === "landlord"
       ? "/landlord"
-      : user?.type === "tenant"
+      : user?.type === "locataire"
       ? "/locataire"
       : "/";
 
@@ -106,7 +106,7 @@ function Router() {
             path="/locataire"
             element={
               <ProtectedRoute
-                isAllowed={!!user && user.type === "tenant"}
+                isAllowed={!!user && user.type === "locataire"}
                 redirectTo="/"
               >
                 <LocatairePage />

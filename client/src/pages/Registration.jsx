@@ -16,9 +16,9 @@ function Registration({ registration }) {
         <div>
           <Form.Check
             type="radio"
-            id="role-tenant"
+            id="role-locataire"
             name="type"
-            value="tenant"
+            value="locataire"
             label="Арендатор"
             defaultChecked
           />
