@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const { Property, Favorites } = require('../../db/models');
 
 class PropertyService {
@@ -68,6 +69,33 @@ class PropertyService {
   async findAllPropertiesofLandor(id) {
     const properties = await Property.findAll({ where: { userId: id } });
     return properties;
+  }
+
+  async findByType(type, priceMin, priceMax) {
+    const filters = {};
+
+    if (type) {
+      filters.type = type;
+    }
+    if (priceMin && priceMax) {
+      filters.price = {
+        [Op.between]: [priceMin, priceMax],
+      };
+    }
+    const property = await Property.findAll({
+      where: filters,
+    });
+    return property;
+  }
+
+  async findByPrice(priceMin, priceMax) {
+    const property = await Property.findAll({
+      where: {
+        [Op.and]: { price: { [Op.gte]: priceMin } },
+        price: { [Op.lte]: priceMax },
+      },
+    });
+    return property;
   }
 }
 

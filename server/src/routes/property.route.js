@@ -9,6 +9,7 @@ const propertyController = new PropertyController(propertyService);
 const messageController = new MessageController();
 
 propertyRouth.get('/', propertyController.findAllProperties);
+// propertyRouth.get('/:type', propertyController.findByType)
 
 
 propertyRouth.post('/', verifyAccessToken, propertyController.createProperty);
