@@ -5,6 +5,8 @@ class PropertyController {
 
   findAllProperties = async (req, res) => {
     try {
+      console.log(req.query, '<------- INFO HERE');
+      
       const properties = await this.propertyService.findAllProperties();
       return res.status(200).json(properties);
     } catch (error) {
