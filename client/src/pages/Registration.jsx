@@ -1,4 +1,4 @@
-import { Button, Container, Form, FormControl} from "react-bootstrap";
+import { Button, Container, Form, FormControl } from "react-bootstrap";
 
 function Registration({ registration }) {
   return (
@@ -10,7 +10,6 @@ function Registration({ registration }) {
           type="password"
           placeholder="Введите пароль"
           name="password"
-
         />
         <Form.Label className="mt-3">Кем вы являетесь?</Form.Label>
         <div>

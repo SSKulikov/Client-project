@@ -13,13 +13,13 @@ function HomePage({
   removeFromFavorites,
   isFavorite,
   favoriteProperties,
-  sendMessage
+  sendMessage,
 }) {
   const [properties, setProperties] = useState([]);
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const isInitializingRef = useRef(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get("/api/property").then(({ data }) => setProperties(data));
@@ -168,7 +168,8 @@ function HomePage({
                 <h2>Добро пожаловать в сервис аренды!</h2>
                 <p className="text-muted mb-0">
                   Здесь вы можете найти подходящий объект недвижимости и
-                  добавить его в избранное.</p>
+                  добавить его в избранное.
+                </p>
               </Col>
             </Row>
           )}

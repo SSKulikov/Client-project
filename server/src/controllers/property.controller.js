@@ -44,7 +44,7 @@ class PropertyController {
       const { id } = req.params;
       const updateProperty = await this.propertyService.updateProperty(id, req.body);
       if (!updateProperty) {
-        return res.status(404).send('Недвижимость не найден');
+        return res.status(404).send('Недвижимость не найдена');
       }
       return res.json(updateProperty);
     } catch (error) {
@@ -56,22 +56,22 @@ class PropertyController {
   deleteProperty = async (req, res) => {
     try {
       console.log('pending');
-      
+
       const { id } = req.params;
       console.log(id);
-      
+
       const { user } = res.locals;
       const property = await this.propertyService.findProperty(id);
       console.log('seccess one');
-      
+
       if (property.userId !== user.id) {
         return res.sendStatus(403);
       }
       console.log('pending 2');
-      
+
       await this.propertyService.deleteProperty(id);
       console.log('pending 23');
-      
+
       return res.sendStatus(204);
     } catch (error) {
       console.log(error);
@@ -116,7 +116,7 @@ class PropertyController {
 
   findAllPropertiesofLandor = async (req, res) => {
     try {
-      const { user } = res.locals; 
+      const { user } = res.locals;
       const properties = await this.propertyService.findAllPropertiesofLandor(user.id);
       return res.status(200).json(properties);
     } catch (error) {
