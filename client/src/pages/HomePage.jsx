@@ -149,7 +149,7 @@ function HomePage({
 
   const [selectData, setSelectData] = useState("");
   const [selectedMinPrice, setSelectedMinPrice] = useState(0);
-  const [selectedMaxPrice, setSelectedMaxPrice] = useState(0);
+  const [selectedMaxPrice, setSelectedMaxPrice] = useState(300000);
   useEffect(() => {
     console.log({ selectedMinPrice });
     console.log({ selectedMaxPrice });
