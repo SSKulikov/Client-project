@@ -1,13 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Button, Col, Container, InputGroup, Row } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 import axios from "axios";
 import PropertyCard from "../entities/PropertyCard";
 import { useNavigate } from "react-router";
-import Card from "react-bootstrap/Card";
-import ListGroup from "react-bootstrap/ListGroup";
 import styles from "../shared/style/Homepage.module.css";
 import CradsPage from "./CradsPage";
-import Form from "react-bootstrap/Form";
 
 function HomePage({
   user,
@@ -153,100 +150,44 @@ function HomePage({
 
   console.log(properties);
   return (
-    <div>
+    <div className={styles.page}>
       <Container>
-        <>
-          {user && user.type === "locataire" && (
-            <Row className="mb-4 align-items-center">
-              <Col>
-                <h2>Добро пожаловать в сервис аренды, {user.name}!</h2>
-                <p className="text-muted mb-0">
-                  Здесь вы можете найти подходящий объект недвижимости и
-                  добавить его в избранное.
-                </p>
-              </Col>
-            </Row>
-          )}
-          {!user && (
-            <Row className="mb-4 align-items-center">
-              <Col>
-                <h2>Добро пожаловать в сервис аренды!</h2>
-                <p className="text-muted mb-0">
-                  Здесь вы можете найти подходящий объект недвижимости и
-                  добавить его в избранное.
-                </p>
-              </Col>
-            </Row>
-          )}
-        </>
-        <Row>
-          {/* <Col md={2}>
-            <h6>Тип жилья</h6>
-            <Form>
-              <Form.Check
-                type="radio"
-                id="type-apartment"
-                name="type"
-                label="Квартира"
-                value="apartment"
-              />
-              <Form.Check
-                type="radio"
-                id="type-room"
-                name="type"
-                label="Комната"
-                value="room"
-              />
-              <Form.Check
-                type="radio"
-                id="type-house"
-                name="type"
-                label="Дом"
-                value="house"
-              />
-              <Form.Label>Цена</Form.Label>
-              <InputGroup size="sm">
-                <Form.Control
-                  type="number"
-                  placeholder="0"
-                  min="0"
-                  max="50000"
-                />
-                <InputGroup.Text>-</InputGroup.Text>
-                <Form.Control
-                  type="number"
-                  placeholder="300 000"
-                  min="0"
-                  max="300000"
-                />
-              </InputGroup>
-              <Button>Найти</Button>
-            </Form>
-          </Col> */}
-          <Col md={12}>
-            <div
-              ref={mapRef}
-              style={{ width: "100%", height: "500px", marginBottom: "20px" }}
-            />
-          </Col>
-        </Row>
-        <Row className={styles.cardsRow}>
-          {properties.map((property) => {
-            return (
-              <Col key={property.id} md={4} className={styles.cardColumn}>
-                <PropertyCard
-                  property={property}
-                  addToFavorites={addToFavorites}
-                  removeFromFavorites={removeFromFavorites}
-                  onCardClick={handleCardClick}
-                  isFavorite={isFavorite(property.id)}
-                  user={user}
-                  sendMessage={sendMessage}
-                />
-              </Col>
-            );
-          })}
-        </Row>
+        <section className={styles.hero}>
+          <h2 className={styles.heroTitle}>
+            {user ? `Добро пожаловать, ${user.name}!` : "Добро пожаловать в сервис аренды!"}
+          </h2>
+          <p className={styles.heroSubtitle}>
+            Находите актуальные объекты, следите за ценами и управляйте избранным в один клик.
+          </p>
+        </section>
+
+        <section className={styles.mapSection}>
+          <div ref={mapRef} className={styles.map} />
+        </section>
+
+        <section className="page-section">
+          <div className={styles.sectionHeader}>
+            <h3 className={styles.sectionTitle}>Актуальные предложения</h3>
+            <span className="text-muted">{properties.length} объектов</span>
+          </div>
+          <Row className={styles.cardsRow}>
+            {properties.map((property) => {
+              return (
+                <Col key={property.id} md={6} lg={4} className={styles.cardColumn}>
+                  <PropertyCard
+                    property={property}
+                    addToFavorites={addToFavorites}
+                    removeFromFavorites={removeFromFavorites}
+                    onCardClick={handleCardClick}
+                    isFavorite={isFavorite(property.id)}
+                    user={user}
+                    sendMessage={sendMessage}
+                  />
+                </Col>
+              );
+            })}
+          </Row>
+        </section>
       </Container>
     </div>
   );

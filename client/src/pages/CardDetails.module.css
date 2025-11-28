@@ -1,0 +1,94 @@
+.page {
+    padding: 32px 0 48px;
+}
+
+.heading {
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+.content {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.media {
+    flex: 1;
+    min-width: 280px;
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-soft);
+}
+
+.image {
+    width: 100%;
+    border-radius: var(--radius-md);
+    margin-bottom: 20px;
+    object-fit: cover;
+}
+
+.infoList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    color: var(--color-text-secondary);
+}
+
+.bookingCard {
+    flex: 0 0 360px;
+    background: #ffffff;
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-subtle);
+}
+
+.field {
+    margin-bottom: 16px;
+}
+
+.field label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+.summary {
+    margin-top: 12px;
+    padding: 16px;
+    border-radius: var(--radius-md);
+    background: var(--color-accent-soft);
+}
+
+.summary p {
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.bookingButton {
+    width: 100%;
+    padding: 12px;
+    margin-top: 16px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--color-accent), #a1b354);
+    color: var(--color-accent-contrast);
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.bookingButton:hover {
+    transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+    .bookingCard {
+        flex: 1 1 100%;
+    }
+}
+
+

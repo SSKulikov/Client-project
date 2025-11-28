@@ -1,19 +1,38 @@
-import { Button, Container, Form, FormControl } from "react-bootstrap";
+import { Button, Form, FormCheck, FormControl, FormGroup, FormLabel } from "react-bootstrap";
+import styles from "../shared/style/AuthForm.module.css";
 
 function Registration({ registration }) {
   return (
-    <Container>
-      <Form onSubmit={registration}>
-        <FormControl type="text" placeholder="Введите логин" name="name" />
-        <FormControl type="email" placeholder="Введите E-mail" name="email" />
-        <FormControl
-          type="password"
-          placeholder="Введите пароль"
-          name="password"
-        />
-        <Form.Label className="mt-3">Кем вы являетесь?</Form.Label>
+    <div className={styles.wrapper}>
+      <Form className={styles.card} onSubmit={registration}>
         <div>
-          <Form.Check
+          <h2 className={styles.title}>Регистрация</h2>
+          <p className={styles.subtitle}>Создайте аккаунт и начните управлять недвижимостью.</p>
+        </div>
+
+        <FormGroup>
+          <FormLabel className={styles.label}>Имя</FormLabel>
+          <FormControl className={styles.input} type="text" placeholder="Введите имя" name="name" />
+        </FormGroup>
+
+        <FormGroup>
+          <FormLabel className={styles.label}>E-mail</FormLabel>
+          <FormControl className={styles.input} type="email" placeholder="Введите E-mail" name="email" />
+        </FormGroup>
+
+        <FormGroup>
+          <FormLabel className={styles.label}>Пароль</FormLabel>
+          <FormControl
+            className={styles.input}
+            type="password"
+            placeholder="Введите пароль"
+            name="password"
+          />
+        </FormGroup>
+
+        <div>
+          <FormLabel className={styles.label}>Кем вы являетесь?</FormLabel>
+          <FormCheck
             type="radio"
             id="role-locataire"
             name="type"
@@ -21,7 +40,7 @@ function Registration({ registration }) {
             label="Арендатор"
             defaultChecked
           />
-          <Form.Check
+          <FormCheck
             type="radio"
             id="role-landlord"
             name="type"
@@ -29,9 +48,12 @@ function Registration({ registration }) {
             label="Арендодатель"
           />
         </div>
-        <Button type="submit">Зарегистрироваться</Button>
+
+        <Button className={styles.submit} type="submit">
+          Зарегистрироваться
+        </Button>
       </Form>
-    </Container>
+    </div>
   );
 }
 

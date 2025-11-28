@@ -1,9 +1,10 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { Container } from "react-bootstrap";
+import styles from "./CardDetails.module.css";
 
 function CardsPage() {
   const [card, setCard] = useState(null);
@@ -11,7 +12,7 @@ function CardsPage() {
   const [error, setError] = useState(null);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  
+
   const { id } = useParams();
 
   useEffect(() => {
@@ -32,11 +33,9 @@ function CardsPage() {
     }
   }, [id]);
 
-  
   const calculateTotal = () => {
-   
-    if (!startDate || !endDate || !card?.price) return 0 ;
-    
+    if (!startDate || !endDate || !card?.price) return 0;
+
     const diffTime = Math.abs(endDate - startDate);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays * card.price;
@@ -44,7 +43,9 @@ function CardsPage() {
 
   const handleBooking = () => {
     const total = calculateTotal();
-    alert(`Забронировано с ${startDate.toLocaleDateString()} по ${endDate.toLocaleDateString()}\nОбщая стоимость: ${total} руб`);
+    alert(
+      `Забронировано с ${startDate.toLocaleDateString()} по ${endDate.toLocaleDateString()}\nОбщая стоимость: ${total} руб`
+    );
   };
 
   if (loading) return <div>Загрузка...</div>;
@@ -52,55 +53,36 @@ function CardsPage() {
   if (!card) return <div>Недвижимость не найдена</div>;
 
   return (
-    <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
-      <h1>Карточка недвижимости</h1>
-      
-      <div style={{ 
-        display: 'flex', 
-        gap: '40px', 
-        flexWrap: 'wrap',
-        alignItems: 'flex-start',
-       
-      }}>
-       
-        <div style={{ flex: '1', minWidth: '300px' }}>
+    <Container className={styles.page}>
+      <h1 className={styles.heading}>Карточка недвижимости</h1>
+
+      <div className={styles.content}>
+        <div className={styles.media}>
           {card.image && (
-            <img 
-              src={card.image} 
-              alt={card.type} 
-              style={{ 
-                width: "100%", 
-                maxWidth: "500px", 
-                borderRadius: '8px',
-                marginBottom: '20px'
-              }} 
-            />
+            <img src={card.image} alt={card.type} className={styles.image} />
           )}
-          <h2>{card.type}</h2>
-          <p><strong><h4>Цена:</h4></strong> {card.price} руб/ночь</p>
-          <p><strong><h4>Адрес:</h4></strong> {card.addres}</p>
-          <p><strong><h4>Описание: </h4>"</strong> {card.descriptions}"</p>
+          <div className={styles.infoList}>
+            <h2>{card.type}</h2>
+            <p>
+              <strong>Цена:</strong> {card.price} руб/ночь
+            </p>
+            <p>
+              <strong>Адрес:</strong> {card.addres}
+            </p>
+            <p>
+              <strong>Описание:</strong> {card.descriptions}
+            </p>
+          </div>
         </div>
 
-     
-        <div style={{ 
-          flex: '0 0 400px', 
-          border: '4px solid #ddd', 
-          padding: '20px', 
-          borderRadius: '8px'
-          
-        }}>
+        <div className={styles.bookingCard}>
           <h3>Забронировать</h3>
-          
-   
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              Дата заезда:
-            </label>
+
+          <div className={styles.field}>
+            <label htmlFor="start-date">Дата заезда</label>
             <DatePicker
-           
+              id="start-date"
               selected={startDate}
-              
               onChange={(date) => setStartDate(date)}
               selectsStart
               startDate={startDate}
@@ -111,12 +93,10 @@ function CardsPage() {
             />
           </div>
 
-         
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-              Дата выезда:
-            </label>
+          <div className={styles.field}>
+            <label htmlFor="end-date">Дата выезда</label>
             <DatePicker
+              id="end-date"
               selected={endDate}
               onChange={(date) => setEndDate(date)}
               selectsEnd
@@ -128,43 +108,28 @@ function CardsPage() {
             />
           </div>
 
-        
-          <div style={{ 
-            marginBottom: '20px', 
-            padding: '15px', 
-            backgroundColor: '#e9f7ef',
-            borderRadius: '4px',
-            border: '1px solid #c3e6cb'
-          }}>
-            <h4>Детали бронирования:</h4>
-            <p><strong>Заезд:</strong> {startDate.toLocaleDateString()}</p>
-            <p><strong>Выезд:</strong> {endDate.toLocaleDateString()}</p>
-            <p><strong>Ночей:</strong> {Math.ceil(Math.abs(endDate - startDate) / (1000 * 60 * 60 * 24))}</p>
-            <p><strong>Общая стоимость:</strong> {calculateTotal()} руб</p>
+          <div className={styles.summary}>
+            <p>
+              <strong>Заезд:</strong> {startDate.toLocaleDateString()}
+            </p>
+            <p>
+              <strong>Выезд:</strong> {endDate.toLocaleDateString()}
+            </p>
+            <p>
+              <strong>Ночей:</strong>{" "}
+              {Math.ceil(Math.abs(endDate - startDate) / (1000 * 60 * 60 * 24))}
+            </p>
+            <p>
+              <strong>Общая стоимость:</strong> {calculateTotal()} руб
+            </p>
           </div>
 
-          
-          <button 
-            onClick={handleBooking}
-            style={{
-              width: '100%',
-              padding: '12px',
-              backgroundColor: '#28a745',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '16px',
-              fontWeight: 'bold'
-            }}
-            onMouseOver={(e) => e.target.style.backgroundColor = '#218838'}
-            onMouseOut={(e) => e.target.style.backgroundColor = '#28a745'}
-          >
+          <button className={styles.bookingButton} onClick={handleBooking}>
             Забронировать
           </button>
         </div>
       </div>
-    </div>
+    </Container>
   );
 }
 

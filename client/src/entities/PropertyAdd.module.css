@@ -1,0 +1,65 @@
+.formCard {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.fieldGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.label {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}
+
+.input {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(127, 143, 62, 0.25);
+}
+
+.submit {
+    margin-top: 8px;
+    align-self: flex-start;
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--color-accent), #a1b354);
+    color: var(--color-accent-contrast);
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow-subtle);
+    transition: transform 0.2s ease;
+}
+
+.submit:hover {
+    transform: translateY(-1px);
+}
+
+@media (max-width: 576px) {
+    .formCard {
+        padding: 20px;
+    }
+}
+
+

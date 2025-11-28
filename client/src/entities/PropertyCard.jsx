@@ -1,5 +1,6 @@
 import { Card, ListGroup, Button, Modal, Form } from "react-bootstrap";
 import { useState } from "react";
+import styles from "./PropertyCard.module.css";
 function PropertyCard({
   property,
   addToFavorites,
@@ -33,60 +34,54 @@ function PropertyCard({
 
   return (
     <>
-      <Card style={{ width: "100%", height: "100%" }}>
-        <Card.Img variant="top" src={property.image} />
-        <Card.Body>
-          <Card.Title>{property.type}</Card.Title>
-          <Card.Text>{property.descriptions}</Card.Text>
+      <Card className={styles.card}>
+        <div className={styles.imageWrapper}>
+          <Card.Img variant="top" src={property.image} className={styles.image} />
+        </div>
+        <Card.Body className={styles.body}>
+          <Card.Title className={styles.title}>{property.type}</Card.Title>
+          <Card.Text className={styles.description}>{property.descriptions}</Card.Text>
         </Card.Body>
-        <ListGroup className="list-group-flush">
-          <ListGroup.Item> Цена: {property.price} руб</ListGroup.Item>
-          <ListGroup.Item>Адрес: {property.addres}</ListGroup.Item>
+        <ListGroup className={`list-group-flush ${styles.metaList}`}>
+          <ListGroup.Item className={styles.metaItem}>
+            <span>Цена</span>
+            <span>{property.price} ₽</span>
+          </ListGroup.Item>
+          <ListGroup.Item className={styles.metaItem}>
+            <span>Адрес</span>
+            <span>{property.addres}</span>
+          </ListGroup.Item>
         </ListGroup>
-        <Card.Body>
+        <div className={styles.actions}>
           {user ? (
             <Button
-              variant="outline-success"
-              size="sm"
               onClick={() => setShowMessageModal(true)}
-              className="me-2"
+              className={`${styles.button} ${styles.buttonSecondary}`}
             >
               Написать
             </Button>
           ) : (
-            <Button
-              variant="outline-secondary"
-              size="sm"
-              disabled
-              className="me-2"
-            >
+            <Button disabled className={`${styles.button} ${styles.buttonSecondary}`}>
               Написать
             </Button>
           )}
           {user?.type === "locataire" ? (
             <Button
-              variant={isFavorite ? "danger" : "outline-primary"}
-              size="sm"
               onClick={handleFavoriteClick}
-              style={{
-                marginLeft: "10px",
-                backgroundColor: isFavorite ? "#dc3545" : "transparent",
-                borderColor: isFavorite ? "#dc3545" : "#007bff",
-                color: isFavorite ? "white" : "#007bff",
-              }}
+              className={`${styles.button} ${styles.buttonSecondary} ${isFavorite ? styles.favoriteActive : ""}`}
             >
-              {!isFavorite ? "Добавить в избранное" : "Удалить из избранного"}
+              {!isFavorite ? "В избранное" : "В избранном"}
             </Button>
           ) : (
             <Card.Link
               href="#"
-              style={{ color: "#6c757d", cursor: "not-allowed" }}
+              className={styles.disabledLink}
               onClick={(e) => e.preventDefault()}
             >
               Избранное
             </Card.Link>
           )}
-        </Card.Body>
+        </div>
       </Card>
 
       <Modal show={showMessageModal} onHide={() => setShowMessageModal(false)}>
