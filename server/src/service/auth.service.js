@@ -26,13 +26,9 @@ class AuthService {
 
   async login({ email, password }) {
     const user = await User.findOne({ where: { email } });
-    console.log(user);
-
     if (!user) {
       throw new Error('need more information');
     }
-    console.log(password);
-    console.log(user.hashpass);
 
     const valid = await bcrypt.compare(password, user.hashpass);
     if (!valid) {
