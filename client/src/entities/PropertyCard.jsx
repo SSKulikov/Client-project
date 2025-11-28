@@ -1,15 +1,27 @@
 import { Card, ListGroup, Button } from "react-bootstrap";
+import { useNavigate } from "react"
 
-function PropertyCard({ property, addToFavorites, removeFromFavorites, isFavorite, user}) {
+
+function PropertyCard({ property, addToFavorites, removeFromFavorites, isFavorite, user,onCardClick}) {
+  // const navigate = useNavigate()
   const handleFavoriteClick = () => {
+    
+   
+   
     if (isFavorite) {
       removeFromFavorites(property.id);
     } else {
       addToFavorites(property.id);
     }
   };
+  const handleCardClick = () => {
+    if(onCardClick){
+      onCardClick(`/${property.id}`)
+    }
+  }
   return (
-    <Card style={{ width: "100%", height: "100%" }}>
+    <Card style={{ width: "100%", height: "100%",cursor:"pointer" }} onClick={handleCardClick} 
+    >
       <Card.Img variant="top" src={property.image} />
       <Card.Body>
         <Card.Title>{property.type}</Card.Title>

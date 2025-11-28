@@ -7,7 +7,7 @@ import LoginPage from "../../pages/LoginPage";
 import HomePage from "../../pages/HomePage";
 import LandlordPage from "../../pages/LandlordPage";
 import LocatairePage from "../../pages/LocatairePage";
-import CardPage from "../../pages/CradsPage";
+import CradsPage from "../../pages/CradsPage";
 import { setAccessToken } from "../../shared/axiosinstance";
 import ProtectedRoute from "../../shared/ProtectedRoute";
 import Layout from "../Layout";
@@ -154,7 +154,7 @@ function Router() {
             />
           }
         >
-          <Route path="/card/:id" element={<CardPage />} />
+          <Route path="/card/:id" element={<CradsPage />} />
           <Route
             path="/"
             element={
