@@ -8,14 +8,13 @@ function PropertyCard({
   isFavorite,
   user,
   sendMessage,
+  onCardClick,
 }) {
   const [showMessageModal, setShowMessageModal] = useState(false);
   const [messageText, setMessageText] = useState("");
 
-  const handleFavoriteClick = () => {
-    
-   
-   
+  const handleFavoriteClick = (event) => {
+    event?.stopPropagation();
     if (isFavorite) {
       removeFromFavorites(property.id);
     } else {
@@ -32,9 +31,38 @@ function PropertyCard({
     }
   };
 
+  const handleCardNavigation = () => {
+    if (onCardClick) {
+      onCardClick(property.id);
+    }
+  };
+
+  const openMessageModal = (event) => {
+    event.stopPropagation();
+    setShowMessageModal(true);
+  };
+
+  const closeMessageModal = () => {
+    setShowMessageModal(false);
+  };
+
+  const handleKeyDown = (event) => {
+    if (!onCardClick) return;
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      onCardClick(property.id);
+    }
+  };
+
   return (
     <>
-      <Card className={styles.card}>
+      <Card
+        className={styles.card}
+        onClick={handleCardNavigation}
+        tabIndex={0}
+        role="button"
+        onKeyDown={handleKeyDown}
+      >
         <div className={styles.imageWrapper}>
           <Card.Img variant="top" src={property.image} className={styles.image} />
         </div>
@@ -55,7 +83,7 @@ function PropertyCard({
         <div className={styles.actions}>
           {user ? (
             <Button
-              onClick={() => setShowMessageModal(true)}
+              onClick={openMessageModal}
               className={`${styles.button} ${styles.buttonSecondary}`}
             >
               Написать
@@ -68,7 +96,9 @@ function PropertyCard({
           {user?.type === "locataire" ? (
             <Button
               onClick={handleFavoriteClick}
-              className={`${styles.button} ${styles.buttonSecondary} ${isFavorite ? styles.favoriteActive : ""}`}
+              className={`${styles.button} ${styles.buttonSecondary} ${
+                isFavorite ? styles.favoriteActive : ""
+              }`}
             >
               {!isFavorite ? "В избранное" : "В избранном"}
             </Button>
@@ -76,7 +106,10 @@ function PropertyCard({
             <Card.Link
               href="#"
               className={styles.disabledLink}
-              onClick={(e) => e.preventDefault()}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
             >
               Избранное
             </Card.Link>
@@ -84,7 +117,7 @@ function PropertyCard({
         </div>
       </Card>
 
-      <Modal show={showMessageModal} onHide={() => setShowMessageModal(false)}>
+      <Modal show={showMessageModal} onHide={closeMessageModal}>
         <Modal.Header closeButton>
           <Modal.Title>Написать сообщение</Modal.Title>
         </Modal.Header>
@@ -111,10 +144,7 @@ function PropertyCard({
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            variant="secondary"
-            onClick={() => setShowMessageModal(false)}
-          >
+          <Button variant="secondary" onClick={closeMessageModal}>
             Отмена
           </Button>
           <Button variant="primary" onClick={handleSendMessage}>
