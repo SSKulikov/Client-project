@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 import axios from "axios";
 import PropertyCard from "../entities/PropertyCard";
 import { useNavigate } from "react-router";
@@ -15,6 +15,12 @@ function HomePage({
   sendMessage,
 }) {
   const [properties, setProperties] = useState([]);
+  const [filters, setFilters] = useState({
+    type: "",
+    priceFrom: "",
+    priceTo: "",
+    address: "",
+  });
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const isInitializingRef = useRef(false);
@@ -29,8 +35,17 @@ function HomePage({
       })
       .then(({ data }) => setProperties(data));
   }, []);
- const handleCardClick = (propertyId) => {
+  const handleCardClick = (propertyId) => {
     navigate(`/card/${propertyId}`);
+  };
+
+  const handleFilterChange = (field, value) => {
+    setFilters((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleApplyFilters = (event) => {
+    event.preventDefault();
+    console.log("Применены фильтры:", filters);
   };
   console.log(properties);
 
@@ -162,7 +177,71 @@ function HomePage({
         </section>
 
         <section className={styles.mapSection}>
-          <div ref={mapRef} className={styles.map} />
+          <Row className="g-4">
+            <Col xs={12} md={4} lg={3}>
+              <Form className={styles.filterCard} onSubmit={handleApplyFilters}>
+                <div className={styles.filterHeader}>
+                  <h4>Фильтр поиска</h4>
+                  <p>Подберите параметры жилья</p>
+                </div>
+
+                <Form.Group className={styles.filterGroup}>
+                  <Form.Label>Тип объекта</Form.Label>
+                  <Form.Select
+                    value={filters.type}
+                    onChange={(e) => handleFilterChange("type", e.target.value)}
+                  >
+                    <option value="">Все типы</option>
+                    <option value="house">Дом</option>
+                    <option value="apartment">Квартира</option>
+                    <option value="room">Комната</option>
+                  </Form.Select>
+                </Form.Group>
+
+                <Form.Group className={styles.filterGroup}>
+                  <Form.Label>Ценовой диапазон, ₽</Form.Label>
+                  <InputGroup>
+                    <Form.Control
+                      type="number"
+                      placeholder="От"
+                      value={filters.priceFrom}
+                      onChange={(e) =>
+                        handleFilterChange("priceFrom", e.target.value)
+                      }
+                    />
+                    <InputGroup.Text>—</InputGroup.Text>
+                    <Form.Control
+                      type="number"
+                      placeholder="До"
+                      value={filters.priceTo}
+                      onChange={(e) =>
+                        handleFilterChange("priceTo", e.target.value)
+                      }
+                    />
+                  </InputGroup>
+                </Form.Group>
+
+                <Form.Group className={styles.filterGroup}>
+                  <Form.Label>Адрес</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Город, улица"
+                    value={filters.address}
+                    onChange={(e) =>
+                      handleFilterChange("address", e.target.value)
+                    }
+                  />
+                </Form.Group>
+
+                <div className={styles.filterActions}>
+                  <Button type="submit">Применить</Button>
+                </div>
+              </Form>
+            </Col>
+            <Col xs={12} md={8} lg={9}>
+              <div ref={mapRef} className={styles.map} />
+            </Col>
+          </Row>
         </section>
 
         <section className="page-section">
