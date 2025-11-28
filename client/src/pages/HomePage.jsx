@@ -30,7 +30,7 @@ function HomePage({
       .then(({ data }) => setProperties(data));
   }, []);
  const handleCardClick = (propertyId) => {
-    navigate(`/api/card/${propertyId}`);
+    navigate(`/card/${propertyId}`);
   };
   console.log(properties);
 
