@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, InputGroup, Row } from "react-bootstrap";
 import axios from "axios";
 import PropertyCard from "../entities/PropertyCard";
 import { useNavigate } from "react-router";
@@ -7,6 +7,7 @@ import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import styles from "../shared/style/Homepage.module.css";
 import CradsPage from "./CradsPage";
+import Form from "react-bootstrap/Form";
 
 function HomePage({
   user,
@@ -14,16 +15,22 @@ function HomePage({
   removeFromFavorites,
   isFavorite,
   favoriteProperties,
-  sendMessage
+  sendMessage,
 }) {
   const [properties, setProperties] = useState([]);
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const isInitializingRef = useRef(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get("/api/property").then(({ data }) => setProperties(data));
+    axios
+      .get("/api/property", {
+        params: {
+          name: "bob",
+        },
+      })
+      .then(({ data }) => setProperties(data));
   }, []);
  const handleCardClick = (propertyId) => {
     navigate(`/api/card/${propertyId}`);
@@ -112,9 +119,6 @@ function HomePage({
       return;
     }
 
-    // Очищаем старые метки
-    mapInstanceRef.current.geoObjects.removeAll();
-
     // Добавляем новые метки
     const coordinates = [];
     properties.forEach((property) => {
@@ -169,14 +173,57 @@ function HomePage({
                 <h2>Добро пожаловать в сервис аренды!</h2>
                 <p className="text-muted mb-0">
                   Здесь вы можете найти подходящий объект недвижимости и
-                  добавить его в избранное.</p>
+                  добавить его в избранное.
+                </p>
               </Col>
             </Row>
           )}
         </>
         <Row>
-          <Col md={2}>hgfhgf</Col>
-          <Col md={10}>
+          {/* <Col md={2}>
+            <h6>Тип жилья</h6>
+            <Form>
+              <Form.Check
+                type="radio"
+                id="type-apartment"
+                name="type"
+                label="Квартира"
+                value="apartment"
+              />
+              <Form.Check
+                type="radio"
+                id="type-room"
+                name="type"
+                label="Комната"
+                value="room"
+              />
+              <Form.Check
+                type="radio"
+                id="type-house"
+                name="type"
+                label="Дом"
+                value="house"
+              />
+              <Form.Label>Цена</Form.Label>
+              <InputGroup size="sm">
+                <Form.Control
+                  type="number"
+                  placeholder="0"
+                  min="0"
+                  max="50000"
+                />
+                <InputGroup.Text>-</InputGroup.Text>
+                <Form.Control
+                  type="number"
+                  placeholder="300 000"
+                  min="0"
+                  max="300000"
+                />
+              </InputGroup>
+              <Button>Найти</Button>
+            </Form>
+          </Col> */}
+          <Col md={12}>
             <div
               ref={mapRef}
               style={{ width: "100%", height: "500px", marginBottom: "20px" }}

@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router";
 import { useState, useEffect } from "react";
 import axios from "axios";
-
 import Registration from "../../pages/Registration";
 import LoginPage from "../../pages/LoginPage";
 import HomePage from "../../pages/HomePage";
@@ -144,28 +143,28 @@ function Router() {
   }
 
   const sendMessage = async (property, messageText) => {
-  const token = localStorage.getItem("token");
-  try {
-    await axios.post(
-      "/api/property/messages",
-      {
-        propertyId: property.id,
-        message: messageText,
-        propertyType: property.type,
-       propertyAddress: property.addres,
-        propertyPrice: property.price,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+    const token = localStorage.getItem("token");
+    try {
+      await axios.post(
+        "/api/property/messages",
+        {
+          propertyId: property.id,
+          message: messageText,
+          propertyType: property.type,
+          propertyAddress: property.addres,
+          propertyPrice: property.price,
         },
-      }
-    );
-  } catch (err) {
-    console.error("Ошибка отправки сообщения:", err);
-    throw err;
-  }
-};
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (err) {
+      console.error("Ошибка отправки сообщения:", err);
+      throw err;
+    }
+  };
 
   return (
     <BrowserRouter>
@@ -201,7 +200,6 @@ function Router() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/login"
             element={
@@ -210,7 +208,6 @@ function Router() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/landlord"
             element={
@@ -225,7 +222,6 @@ function Router() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/locataire"
             element={

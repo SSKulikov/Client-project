@@ -4,16 +4,16 @@ class MessageController {
   getMessages = async (req, res) => {
     try {
       const { user } = res.locals;
-      
+
       const messages = await Message.findAll({
         where: { userId: user.id },
         include: [
           {
             model: Property,
-            attributes: ['type', 'addres', 'price']
-          }
+            attributes: ['type', 'addres', 'price'],
+          },
         ],
-        order: [['createdAt', 'DESC']] 
+        order: [['createdAt', 'DESC']],
       });
 
       return res.status(200).json(messages);
@@ -26,9 +26,16 @@ class MessageController {
   sendMessage = async (req, res) => {
     try {
       const { user } = res.locals;
-      const { propertyId, message, propertyType, propertyAddress, propertyPrice } = req.body;
+      const { propertyId, message, propertyType, propertyAddress, propertyPrice } =
+        req.body;
 
-      console.log('Получено сообщение:', { propertyId, message, propertyType, propertyAddress, propertyPrice }); 
+      console.log('Получено сообщение:', {
+        propertyId,
+        message,
+        propertyType,
+        propertyAddress,
+        propertyPrice,
+      });
 
       const property = await Property.findByPk(propertyId);
       if (!property) {
@@ -42,22 +49,20 @@ class MessageController {
         propertyType: propertyType || property.type,
         propertyAddress: propertyAddress || property.addres,
         propertyPrice: propertyPrice || property.price.toString(),
-       
       });
 
-      console.log('✅ Сообщение создано в БД:', newMessage.id); 
       const messageWithDetails = await Message.findByPk(newMessage.id, {
         include: [
           {
             model: Property,
-            attributes: ['type', 'addres', 'price']
-          }
-        ]
+            attributes: ['type', 'addres', 'price'],
+          },
+        ],
       });
 
       return res.status(201).json(messageWithDetails);
     } catch (error) {
-      console.error('❌ Ошибка отправки сообщения:', error);
+      console.error('Ошибка отправки сообщения:', error);
       res.status(500).json({ error: 'Ошибка отправки сообщения: ' + error.message });
     }
   };
@@ -68,7 +73,7 @@ class MessageController {
       const { id } = req.params;
 
       const message = await Message.findOne({
-        where: { id, userId: user.id }
+        where: { id, userId: user.id },
       });
 
       if (!message) {
