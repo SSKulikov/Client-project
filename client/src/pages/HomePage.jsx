@@ -5,6 +5,7 @@ import PropertyCard from "../entities/PropertyCard";
 import { useNavigate } from "react-router";
 import styles from "../shared/style/Homepage.module.css";
 import CradsPage from "./CradsPage";
+import axiosinstance from "../shared/axiosinstance";
 
 function HomePage({
   user,
@@ -15,39 +16,23 @@ function HomePage({
   sendMessage,
 }) {
   const [properties, setProperties] = useState([]);
-  const [filters, setFilters] = useState({
-    type: "",
-    priceFrom: "",
-    priceTo: "",
-    address: "",
-  });
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const isInitializingRef = useRef(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    axios
-      .get("/api/property", {
-        params: {
-          name: "bob",
-        },
-      })
-      .then(({ data }) => setProperties(data));
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get("/api/property", {
+  //       params: {
+  //         name: "bob",
+  //       },
+  //     })
+  //     .then(({ data }) => setProperties(data));
+  // }, []);
   const handleCardClick = (propertyId) => {
     navigate(`/card/${propertyId}`);
   };
-
-  const handleFilterChange = (field, value) => {
-    setFilters((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleApplyFilters = (event) => {
-    event.preventDefault();
-    console.log("Применены фильтры:", filters);
-  };
-  console.log(properties);
 
   // Загрузка скрипта Яндекс.Карт API и инициализация карты
   useEffect(() => {
@@ -161,25 +146,52 @@ function HomePage({
       );
     }
   }, [properties]);
-  console.log(user, "<------- user здесь");
+
+  const [selectData, setSelectData] = useState("");
+  const [selectedMinPrice, setSelectedMinPrice] = useState(0);
+  const [selectedMaxPrice, setSelectedMaxPrice] = useState(0);
+  useEffect(() => {
+    console.log({ selectedMinPrice });
+    console.log({ selectedMaxPrice });
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`/api/property`, {
+          params: {
+            type: selectData,
+            priceMin: selectedMinPrice,
+            priceMax: selectedMaxPrice,
+          },
+        });
+        setProperties(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, [selectData, selectedMinPrice, selectedMaxPrice]);
 
   console.log(properties);
+
   return (
     <div className={styles.page}>
       <Container>
         <section className={styles.hero}>
           <h2 className={styles.heroTitle}>
-            {user ? `Добро пожаловать, ${user.name}!` : "Добро пожаловать в сервис аренды!"}
+            {user
+              ? `Добро пожаловать, ${user.name}!`
+              : "Добро пожаловать в сервис аренды!"}
           </h2>
           <p className={styles.heroSubtitle}>
-            Находите актуальные объекты, следите за ценами и управляйте избранным в один клик.
+            Находите актуальные объекты, следите за ценами и управляйте
+            избранным в один клик.
           </p>
         </section>
 
         <section className={styles.mapSection}>
           <Row className="g-4">
             <Col xs={12} md={4} lg={3}>
-              <Form className={styles.filterCard} onSubmit={handleApplyFilters}>
+              <Form className={styles.filterCard}>
                 <div className={styles.filterHeader}>
                   <h4>Фильтр поиска</h4>
                   <p>Подберите параметры жилья</p>
@@ -187,15 +199,18 @@ function HomePage({
 
                 <Form.Group className={styles.filterGroup}>
                   <Form.Label>Тип объекта</Form.Label>
-                  <Form.Select
-                    value={filters.type}
-                    onChange={(e) => handleFilterChange("type", e.target.value)}
-                  >
-                    <option value="">Все типы</option>
-                    <option value="house">Дом</option>
-                    <option value="apartment">Квартира</option>
-                    <option value="room">Комната</option>
-                  </Form.Select>
+                  {
+                    <Form.Select
+                      id="selectDataProp"
+                      value={selectData}
+                      onChange={(e) => setSelectData(e.target.value)}
+                    >
+                      <option value="">Все типы</option>
+                      <option value="Дом">Дом</option>
+                      <option value="Квартира">Квартира</option>
+                      <option value="Комната">Комната</option>
+                    </Form.Select>
+                  }
                 </Form.Group>
 
                 <Form.Group className={styles.filterGroup}>
@@ -204,33 +219,24 @@ function HomePage({
                     <Form.Control
                       type="number"
                       placeholder="От"
-                      value={filters.priceFrom}
-                      onChange={(e) =>
-                        handleFilterChange("priceFrom", e.target.value)
-                      }
+                      value={selectedMinPrice}
+                      defaultValue={0}
+                      onChange={(e) => setSelectedMinPrice(e.target.value)}
                     />
                     <InputGroup.Text>—</InputGroup.Text>
                     <Form.Control
                       type="number"
                       placeholder="До"
-                      value={filters.priceTo}
-                      onChange={(e) =>
-                        handleFilterChange("priceTo", e.target.value)
-                      }
+                      defaultValue={300000}
+                      value={selectedMaxPrice}
+                      onChange={(e) => setSelectedMaxPrice(e.target.value)}
                     />
                   </InputGroup>
                 </Form.Group>
 
                 <Form.Group className={styles.filterGroup}>
                   <Form.Label>Адрес</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Город, улица"
-                    value={filters.address}
-                    onChange={(e) =>
-                      handleFilterChange("address", e.target.value)
-                    }
-                  />
+                  <Form.Control type="text" placeholder="Город, улица" />
                 </Form.Group>
 
                 <div className={styles.filterActions}>
@@ -252,7 +258,12 @@ function HomePage({
           <Row className={styles.cardsRow}>
             {properties.map((property) => {
               return (
-                <Col key={property.id} md={6} lg={4} className={styles.cardColumn}>
+                <Col
+                  key={property.id}
+                  md={6}
+                  lg={4}
+                  className={styles.cardColumn}
+                >
                   <PropertyCard
                     property={property}
                     addToFavorites={addToFavorites}

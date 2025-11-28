@@ -6,8 +6,19 @@ class PropertyController {
   findAllProperties = async (req, res) => {
     try {
       console.log(req.query, '<------- INFO HERE');
-      
-      const properties = await this.propertyService.findAllProperties();
+
+      let properties = [];
+
+      // if (req.query.type) {
+      //   properties = await this.propertyService.findByType(req.query.type);
+      // } else {
+      properties = await this.propertyService.findByType(
+        req.query.type,
+        req.query.priceMin,
+        req.query.priceMax,
+      );
+      // }
+
       return res.status(200).json(properties);
     } catch (error) {
       console.log(error);
@@ -124,6 +135,35 @@ class PropertyController {
     } catch (error) {
       console.log(error);
       res.sendStatus(401);
+    }
+  };
+
+  findByType = async (req, res) => {
+    try {
+      const { type } = req.params.type;
+      if (!type) {
+        return res.json([]);
+      }
+      const properties = await this.propertyService.findByType(type);
+      return res.status(200).json(properties);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  findByPrice = async (req, res) => {
+    try {
+      const { priceMin } = req.params.priceMin;
+      const { priceMax } = req.params.priceMax;
+
+      if (!priceMin && !priceMax) {
+        return res.json([]);
+      }
+
+      const properties = await this.propertyService.findByPrice(priceMin, priceMax);
+      return res.status(200).json(properties);
+    } catch (error) {
+      console.log(error);
     }
   };
 }
